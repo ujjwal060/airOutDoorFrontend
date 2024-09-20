@@ -1,0 +1,76 @@
+.calendar-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.5rem;
+    margin: 0 auto;
+  }
+  
+  .calendar-header button {
+    background-color:white;
+    color: #505050;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 2rem;
+    font-weight: bolder;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+  }
+  
+  .calendar-day {
+    text-align: center;
+    padding: 10px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .calendar-day.today {
+    background-color: #505050;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px 10px 20px;
+  }
+
+  .c-day{
+    font-weight: bold;
+  }
+  
+  .prev-month-day {
+    color: #ccc;
+  }
+  
+  
+  .current-month-day:hover {
+    background-color: #505050;
+    color: white;
+    cursor: pointer;
+  }
+
+  .current-day {
+    background-color: #505050;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px 10px 16px;
+    border-radius: 2px;
+  }
+  
