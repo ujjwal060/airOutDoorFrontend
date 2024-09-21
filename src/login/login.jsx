@@ -15,26 +15,10 @@ function Login() {
     
     try {
       const response = await axios.post('http://localhost:8000/user/login', { username, password });
-      
-      // Assuming the response contains a token or success message
-      if (response.status === 200) {
-        // Store the token or perform any required actions here
-        // For example, store token in localStorage:
-        // localStorage.setItem('token', response.data.token);
-
-        // Show success toast
-        toast.success('Login successful!', {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-
-        // Navigate to dashboard
-        navigate('/dashboard');
-      }
+        toast.success(response?.data?.message);
+        navigate('/');
     } catch (error) {
-      // Handle error response
-      toast.error('Login failed. Please check your credentials.', {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.error(error.response?.data?.message);
     }
   };
 
