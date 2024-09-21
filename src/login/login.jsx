@@ -1,29 +1,40 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     try {
-      const response = await axios.post('http://localhost:8000/user/login', { username, password });
-        toast.success(response?.data?.message);
-        navigate('/');
+      const response = await axios.post("http://localhost:8000/user/login", {
+        username,
+        password,
+      });
+      toast.success(response?.data?.message);
+      setTimeout(() => {
+        navigate("/");
+      }, 200);
     } catch (error) {
       toast.error(error.response?.data?.message);
     }
   };
+  const handleForgotPasswordClick = () => {
+    navigate("/forgotpassword");
+  };
+
+  const handleSignupClick = () => {
+    navigate("/signup");
+  };
 
   return (
-    <div className='login'>
+    <div className="login">
       <section className="py-5">
         <div className="container">
           <div className="row">
@@ -32,8 +43,15 @@ function Login() {
                 <form onSubmit={handleSubmit}>
                   <div className="d-flex align-items-center justify-content-between">
                     <h1>Log in</h1>
-                    <p className="hidden-xs">No Account?<br />
-                      <Link className="text-decoration-underline fw-bold text-dark" to="/signup">Sign Up</Link>
+                    <p className="hidden-xs">
+                      No Account?
+                      <br />
+                      <Link
+                        className="text-decoration-underline fw-bold text-dark"
+                        to="/signup"
+                      >
+                        Sign Up
+                      </Link>
                     </p>
                   </div>
                   <div className="field">
@@ -66,12 +84,24 @@ function Login() {
                     </button>
                   </div>
                   <div className="text-right">
-                    <Link className="flex-end text-danger" to="/forgotpassword">Forget Password?</Link>
+                    <span
+                      className="flex-end text-danger"
+                      onClick={handleForgotPasswordClick}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Forget Password?
+                    </span>
                   </div>
-                  <input type="submit" value="Submit" className="submit_btn" />
+                  <input type="submit" value="Login" className="submit_btn" />
                   <p className="text-center hidden-sm">
-                    No Account? 
-                    <Link className="text-decoration-underline fw-bold" to="/signup">Sign Up</Link>
+                    No Account?
+                    <span
+                      className="text-decoration-underline fw-bold"
+                      onClick={handleSignupClick}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Sign Up
+                    </span>
                   </p>
                 </form>
               </div>
