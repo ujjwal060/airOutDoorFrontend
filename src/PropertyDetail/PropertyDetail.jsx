@@ -17,6 +17,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Calendar from "../Calendar/Calendar";
+import { useLocation } from "react-router-dom";
 
 function PropertyDetail() {
   const settings = {
@@ -30,8 +31,12 @@ function PropertyDetail() {
     prevArrow: <PrevArrow />,
   };
 
+  const location = useLocation();
+  const { property } = location.state || {};
   const [currentMonth, setCurrentMonth] = useState(0);
 
+  console.log(property);
+  
   const handlePrevMonth = () => {
     setCurrentMonth(currentMonth - 1);
   };
@@ -49,8 +54,8 @@ function PropertyDetail() {
               <div class="property_detail">
                 <div class="property_header">
                   <div class="content">
-                    <h4>Honey Hole</h4>
-                    <span>Arkansas</span>
+                    <h4>{property.name}</h4>
+                    <span>{property.amenities}</span>
                   </div>
                   <div class="rating">
                     <ul class="stars">
@@ -72,20 +77,20 @@ function PropertyDetail() {
                     </ul>
                   </div>
                   <div class="links">
-                    <a href="#" class="btn btn-dark">
-                      $300/Night
-                    </a>
+                    <p class="btn btn-dark">
+                    ${property.pricing}/Night
+                    </p>
                   </div>
                 </div>
                 <div class="property_images">
-                  <img src={prop1} alt="gallery-item" />
+                  <img src={property.imageUrl[0]} alt="gallery-item" />
                   <div class="d-flex flex-column gap-1">
-                    <img src={prop2} alt="gallery-item" />
-                    <img src={prop3} alt="gallery-item" />
+                    <img src={property.imageUrl[0]} alt="gallery-item" />
+                    <img src={property.imageUrl[0]} alt="gallery-item" />
                   </div>
                   <div class="d-flex flex-column gap-1">
-                    <img src={prop4} alt="gallery-item" />
-                    <img src={prop5} alt="gallery-item" />
+                    <img src={property.imageUrl[0]} alt="gallery-item" />
+                    <img src={property.imageUrl[0]} alt="gallery-item" />
                   </div>
                 </div>
                 <div class="gallery_content">
@@ -99,11 +104,7 @@ function PropertyDetail() {
                 </div>
                 <div class="description">
                   <h4>Listing Description</h4>
-                  <p>
-                    This property is small but lines up with a pretty big water
-                    stream. It has several ponds that has plenty of ducks flying
-                    in and they don’t get pressured much. Come have fun.
-                  </p>
+                  <p>{property.description}</p>
                 </div>
               </div>
             </div>
