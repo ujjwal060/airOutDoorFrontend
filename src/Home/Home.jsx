@@ -50,7 +50,7 @@ function Home() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/catogries/subCatogry",
+        "http://44.196.192.232:8000/catogries/subCatogry",
         { activeTab }
       );
       setAnimalData(response.data.result);
@@ -64,7 +64,7 @@ function Home() {
   const fetchProperties = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/property/featured"
+        "http://44.196.192.232:8000/property/featured"
       );
       setProperties(response.data);
     } catch (error) {
