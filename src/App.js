@@ -23,6 +23,11 @@ import ListingImage from './SubmitProperty/ListingImage/ListingImage';
 import ListingLocation from './SubmitProperty/ListingLocation/ListingLocation';
 import ListingPrice from './SubmitProperty/ListingPrice/ListingPrice';
 import ListingResponse from './SubmitProperty/ListingResponse/ListingResponse';
+import Account from "./SideOptions/Account/Account";
+import Booking from './SideOptions/Booking/Booking';
+import Favorites from "./SideOptions/Favorites/Favorites";
+import Message from './SideOptions/Message/Message';
+import Notification from './SideOptions/Notification/Notification';
 
 function App() {
   const location = useLocation();
@@ -51,6 +56,11 @@ function App() {
         <Route path="/listinglocation" element={<ListingLocation />} />
         <Route path="/listingprice" element={<ListingPrice />} />
         <Route path="/listingresponse" element={<ListingResponse />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/booking" element={<Booking />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/message" element={<Message />} />
+        <Route path="/notification" element={<Notification />} />
         <Route path="/" element={<Home />} />
       </Routes>
       {!noFooterPaths.includes(location.pathname) && <Footer />}

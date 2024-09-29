@@ -142,17 +142,23 @@ input:focus-within {
   border-radius: 5px;
   position: absolute;
   top: 100%;
+  right: 0px;
   min-width: 200px;
-  display: none;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  z-index: 2;
+  /* display: none; */
 }
 .menu_dropdown ul {
   list-style: none;
+  margin-left: -1.5rem;
 }
-.menu_dropdown ul li a {
+.menu_dropdown ul li .link-menu {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 10px;
+  color: #000;
+  text-decoration: none;
 }
 
 /* ============= Breadcrumb =============== */
@@ -1676,4 +1682,19 @@ a.ui-state-default.ui-state-active {
   border: 1px solid #E3E3E3;
   padding: 5px 10px;
   border-radius: 10px;
+}
+
+.list-location{
+  border: 1px solid silver;
+  border-style: dashed;
+  background-color: #F8F8FF;
+  border-radius: 10px;
+}
+
+.list-location .form-control{
+  background-color: #F8F8FF;
+}
+
+.list-location .field:nth-of-type(7){
+  width: 600px;
 }

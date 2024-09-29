@@ -1,5 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 function ListingDetails() {
   return (
@@ -83,12 +84,14 @@ function ListingDetails() {
                   </div>
                   <div class="field">
                     <label for="instant_booking">
-                      <input type="checkbox" name="instant_booking" id="" />
+                      <input type="checkbox" name="instant_booking" id="" style={{marginRight: "6px"}}/>
                       Allow instant booking? If checked, you will not have the
                       option to reject a booking request.
                     </label>
                   </div>
+                  <Link to="/listinglocation">
                   <input type="submit" class="submit_btn" value="Save & Next" />
+                  </Link>
                 </div>
                 <div class="sidebar">
                   <div class="steps">
