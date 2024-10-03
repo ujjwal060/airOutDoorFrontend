@@ -4,8 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from '../AuthContext';
 
 function Login() {
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ function Login() {
         password,
       });
       localStorage.setItem("token", response?.data?.token);
+      login();
       toast.success(response?.data?.message);
       setTimeout(() => {
         navigate("/");

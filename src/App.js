@@ -28,6 +28,7 @@ import Booking from './SideOptions/Booking/Booking';
 import Favorites from "./SideOptions/Favorites/Favorites";
 import Message from './SideOptions/Message/Message';
 import Notification from './SideOptions/Notification/Notification';
+import { AuthProvider } from './AuthContext';
 
 function App() {
   const location = useLocation();
@@ -70,9 +71,11 @@ function App() {
 
 function AppWrapper() {
   return (
-    <Router>
-      <App />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <App />
+      </Router>
+    </AuthProvider>
   );
 }
 
