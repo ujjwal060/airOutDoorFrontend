@@ -17,6 +17,7 @@ function Login() {
         username,
         password,
       });
+      localStorage.setItem("token", response?.data?.token);
       toast.success(response?.data?.message);
       setTimeout(() => {
         navigate("/");
