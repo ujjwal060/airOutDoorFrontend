@@ -1,0 +1,98 @@
+.calendar-container {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .calendar-header button {
+    background-color: white;
+    color: #505050;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+  }
+  
+  .calendar-day {
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .calendar-day.c-day {
+    font-weight: bold;
+    color: #999;
+  }
+  
+  .prev-month-day {
+    color: #ccc;
+  }
+  
+  .current-month-day {
+    background-color: #f9f9f9;
+  }
+  
+  .current-month-day:hover {
+    background-color: #505050;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .current-day {
+    background-color: #505050;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .calendar-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .calendar-footer .past {
+    color: #ccc;
+  }
+  
+  .calendar-footer .today {
+    color: #505050;
+    font-weight: bold;
+  }
+  
+  .calendar-footer .booked {
+    color: #ff9999;
+  }
+  

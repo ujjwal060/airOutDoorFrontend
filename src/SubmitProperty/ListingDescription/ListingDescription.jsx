@@ -46,7 +46,7 @@ function ListingDescription() {
                   </div>
                   <div class="field">
                     <label for="instant_booking">
-                      <input type="checkbox" name="instant_booking" id="" />
+                      <input type="checkbox" name="instant_booking" id="" style={{marginRight: "6px"}}/>
                       Allow instant booking? If checked, you will not have the
                       option to reject a booking request.
                     </label>
