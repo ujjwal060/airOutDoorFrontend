@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import logo from "../images/logo.png";
 import menu from "../images/menu-icon.svg";
 import user from "../images/user-icn.svg";
@@ -12,11 +12,19 @@ import fifth from "../images/nortification.svg";
 import sixth from "../images/logout.svg";
 import { Link } from "react-router-dom";
 import "./header.css";
-import { useAuth } from "../AuthContext"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../AuthContext";
+import axios from "axios";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
+  const [userdata, setUser] = useState("");
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   const toggleMenu = (event) => {
     setMenuOpen(!menuOpen);
@@ -25,6 +33,18 @@ function Header() {
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+  };
+
+  const fetch = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.get(
+        `http://localhost:8000/user/getUser/${userId}`
+      );
+      setUser(response?.data?.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
   };
 
   return (
@@ -44,7 +64,10 @@ function Header() {
                   <Link
                     to="/signup"
                     className="btn btn-light sign_up"
-                    style={{ border: "1px solid black", backgroundColor: "white" }}
+                    style={{
+                      border: "1px solid black",
+                      backgroundColor: "white",
+                    }}
                   >
                     Sign Up
                   </Link>
@@ -66,7 +89,7 @@ function Header() {
                       <div className="menu_dropdown">
                         <div className="user">
                           <img src={user} alt="User" />
-                          XYZ.123
+                          {userdata.username}
                         </div>
                         <ul>
                           <li>
@@ -91,7 +114,8 @@ function Header() {
                           </li>
                           <li>
                             <Link to="notification" className="link-menu">
-                              <img src={fifth} alt="Notifications" /> Notifications
+                              <img src={fifth} alt="Notifications" />{" "}
+                              Notifications
                             </Link>
                           </li>
                           <li>
@@ -117,46 +141,51 @@ function Header() {
 
         {/* Logout Confirmation Modal */}
         <div
-  className="modal fade"
-  id="logoutModal"
-  tabIndex="-1"
-  aria-labelledby="logoutModalLabel"
-  aria-hidden="true"
->
-  <div className="modal-dialog modal-dialog-centered"> {/* Ensures modal is centered */}
-    <div className="modal-content custom-modal">
-      <div className="modal-header">
-        <h5 className="modal-title w-100 text-center" id="logoutModalLabel">
-          Confirm Logout
-        </h5>
-      </div>
-      <div className="modal-body text-center">
-        <p>Are you sure you want to log out?</p>
-      </div>
-      <div className="modal-footer justify-content-center">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
-          style={{ width: "100px" }}
+          className="modal fade"
+          id="logoutModal"
+          tabIndex="-1"
+          aria-labelledby="logoutModalLabel"
+          aria-hidden="true"
         >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={handleLogout}
-          data-bs-dismiss="modal"
-          style={{ width: "100px" }}
-        >
-          Log Out
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
+          <div className="modal-dialog modal-dialog-centered">
+            {" "}
+            {/* Ensures modal is centered */}
+            <div className="modal-content custom-modal">
+              <div className="modal-header">
+                <h5
+                  className="modal-title w-100 text-center"
+                  id="logoutModalLabel"
+                >
+                  Confirm Logout
+                </h5>
+              </div>
+              <div className="modal-body text-center">
+                <p>Are you sure you want to log out?</p>
+              </div>
+              <div className="modal-footer justify-content-center">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  style={{ width: "100px" }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleLogout}
+                  data-bs-dismiss="modal"
+                  style={{ width: "100px" }}
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
+      <ToastContainer/>
     </div>
   );
 }

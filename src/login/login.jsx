@@ -20,6 +20,7 @@ function Login() {
         password,
       });
       localStorage.setItem("token", response?.data?.token);
+      localStorage.setItem("userId", response?.data?.data?._id);
       login();
       toast.success(response?.data?.message);
       setTimeout(() => {
