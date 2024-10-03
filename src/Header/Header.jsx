@@ -10,7 +10,7 @@ import third from "../images/booking.svg";
 import fourth from "../images/heart.svg";
 import fifth from "../images/nortification.svg";
 import sixth from "../images/logout.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./header.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,13 +18,23 @@ import { useAuth } from "../AuthContext";
 import axios from "axios";
 
 function Header() {
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
   const [userdata, setUser] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
+ useEffect(() => {
+  if (userId && token && !userdata) {
     fetch();
-  }, []);
+  }
+  
+  if (!userId || !token) {
+    navigate("/");
+  }
+}, [userId, token, userdata]);
 
   const toggleMenu = (event) => {
     setMenuOpen(!menuOpen);
@@ -33,11 +43,11 @@ function Header() {
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+    navigate("/");
   };
 
   const fetch = async () => {
     try {
-      const userId = localStorage.getItem("userId");
       const response = await axios.get(
         `http://localhost:8000/user/getUser/${userId}`
       );
@@ -46,6 +56,7 @@ function Header() {
       toast.error(error.response?.data?.message);
     }
   };
+
 
   return (
     <div className="header">
@@ -185,7 +196,7 @@ function Header() {
           </div>
         </div>
       </header>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

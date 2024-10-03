@@ -29,6 +29,7 @@ import Favorites from "./SideOptions/Favorites/Favorites";
 import Message from './SideOptions/Message/Message';
 import Notification from './SideOptions/Notification/Notification';
 import { AuthProvider } from './AuthContext';
+import ProtectedRoute from './Protected'; 
 
 function App() {
   const location = useLocation();
@@ -57,11 +58,11 @@ function App() {
         <Route path="/listinglocation" element={<ListingLocation />} />
         <Route path="/listingprice" element={<ListingPrice />} />
         <Route path="/listingresponse" element={<ListingResponse />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/message" element={<Message />} />
-        <Route path="/notification" element={<Notification />} />
+        <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+        <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+        <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/message" element={<ProtectedRoute><Message /></ProtectedRoute>} />
+        <Route path="/notification" element={<ProtectedRoute><Notification /></ProtectedRoute>} />
         <Route path="/" element={<Home />} />
       </Routes>
       {!noFooterPaths.includes(location.pathname) && <Footer />}
