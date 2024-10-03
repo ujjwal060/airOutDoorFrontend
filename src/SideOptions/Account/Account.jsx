@@ -40,7 +40,7 @@ function Account() {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/getUser/${userId}`
+        `http://44.196.192.232:8000/user/getUser/${userId}`
       );
       const userData = response?.data?.data;
       setFormData({
@@ -103,7 +103,7 @@ function Account() {
       }
 
       const response = await axios.put(
-        `http://localhost:8000/user/update/${userId}`,
+        `http://44.196.192.232:8000/user/update/${userId}`,
         formDataToSend
       );
       fetchUserData();
@@ -124,7 +124,7 @@ function Account() {
       return;
     }
     try {
-      const response = await axios.put(`http://localhost:8000/user/changePassword/${userId}`, {
+      const response = await axios.put(`http://44.196.192.232:8000/user/changePassword/${userId}`, {
         password,
       });
       toast.success(response?.data?.message);
