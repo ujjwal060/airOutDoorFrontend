@@ -66,6 +66,8 @@ function Home() {
       const response = await axios.get(
         "http://44.196.192.232:8000/property/featured"
       );
+      console.log(response.data);
+
       setProperties(response.data);
     } catch (error) {
       toast.error(error.response?.data?.message);
@@ -82,7 +84,7 @@ function Home() {
   };
 
   const handlePropertyClick = (property) => {
-    navigate('/propertydetail', { state: { property } });
+    navigate("/propertydetail", { state: { property } });
   };
 
   useEffect(() => {
@@ -368,15 +370,27 @@ function Home() {
             {properties.map((property) => (
               <div className="col-lg-3 col-md-6" key={property.id}>
                 <div className="property">
-                  <Slider {...settings} className="gallery">
-                    {property.imageUrl.map((image, index) => (
-                      <img
-                        src={image}
-                        alt={`gallery-item-${index}`}
-                        key={index}
-                      />
-                    ))}
-                  </Slider>
+                  {property.imageUrl.length > 1 ? (
+                    <Slider {...settings} className="gallery">
+                      {property.imageUrl.map((image, index) => (
+                        <div key={index}>
+                          <img
+                            src={image}
+                            alt={`gallery-item-${index}`}
+                            style={{ width: "100%",  height: "200px",objectFit: "cover" }}
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  ) : property.imageUrl.length === 1 ? (
+                    <img
+                      src={property.imageUrl[0]}
+                      alt="single-image"
+                      style={{ width: "100%",  height: "200px",objectFit: "cover" }}
+                    />
+                  ) : (
+                    <p>No images available</p>
+                  )}
                   <div className="gallery_content">
                     <div className="content">
                       <h4>{property.name}</h4>
