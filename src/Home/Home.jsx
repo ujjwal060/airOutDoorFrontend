@@ -49,6 +49,8 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([]);
   const [booking, setBooking] = useState([]);
+  const userId = localStorage.getItem("userId");
+
 
   const fetchSubCatogry = async (category) => {
     setLoading(true);
@@ -68,7 +70,7 @@ function Home() {
   const fetchBooking = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/booking/book/${"66fea066bccb301bbe7b52cd"}`
+        `http://44.196.192.232:8000/booking/book/${userId}`
       );
       setBooking(response.data);
     } catch (error) {
