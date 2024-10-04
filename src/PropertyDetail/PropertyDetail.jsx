@@ -52,6 +52,7 @@ function PropertyDetail() {
 
     const bookingData = {
       propertyId: property._id,
+      vendorId:property.vendorId,
       userId,
       checkIn,
       checkOut,
