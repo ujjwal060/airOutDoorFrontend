@@ -28,8 +28,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { useAuth } from "../AuthContext";
+
 
 function Home() {
+  const { isLoggedIn } = useAuth();
   const settings = {
     dots: false,
     infinite: true,
@@ -45,8 +48,9 @@ function Home() {
   const [animalData, setAnimalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([]);
+  const [booking, setBooking] = useState([]);
 
-  const fetchAnimalData = async (category) => {
+  const fetchSubCatogry = async (category) => {
     setLoading(true);
     try {
       const response = await axios.post(
@@ -59,6 +63,31 @@ function Home() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchBooking = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/booking/book/${"66fea066bccb301bbe7b52cd"}`
+      );
+      setBooking(response.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+
+  const getTimeAgo = (createdAt) => {
+    const now = new Date();
+    const bookingTime = new Date(createdAt);
+    const diffInMs = now - bookingTime;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    return `${diffInDays} days ago`;
   };
 
   const fetchProperties = async () => {
@@ -75,7 +104,7 @@ function Home() {
   const handleTabClick = (tabName) => {
     if (activeTab !== tabName) {
       setActiveTab(tabName);
-      fetchAnimalData(tabName);
+      fetchSubCatogry(tabName);
     } else {
       setActiveTab(null);
     }
@@ -85,10 +114,16 @@ function Home() {
     navigate("/propertydetail", { state: { property } });
   };
 
+  const handleBooking = (bookingData) => {
+    navigate("/propertydetail", { state: { bookingData } });
+  };
+  
+
   useEffect(() => {
     fetchProperties();
+    fetchBooking();
     if (activeTab) {
-      fetchAnimalData(activeTab);
+      fetchSubCatogry(activeTab);
     }
   }, [activeTab]);
 
@@ -207,155 +242,89 @@ function Home() {
           </div>
         </div>
       </section>
-
-      <section className="pt-5">
-        <div className="container">
-          <div className="row">
-            <div className="col-sm-12">
-              <h3 className="heading">Recent Booked</h3>
+      {isLoggedIn && (
+        <section className="pt-5">
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-12">
+                <h3 className="heading">Recent Booked</h3>
+              </div>
+            </div>
+            <div className="row">
+              {booking.map((item) => (
+                <div className="col-lg-3 col-md-6" key={item._id}>
+                  <div className="property">
+                    {item.propertyDetails.imageUrl.length > 1 ? (
+                      <Slider {...settings} className="gallery">
+                        {item.propertyDetails.imageUrl.map((image, index) => (
+                          <div key={index}>
+                            <img
+                              src={image}
+                              alt={`gallery-item-${index}`}
+                              style={{
+                                width: "100%",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </Slider>
+                    ) : item.propertyDetails.imageUrl.length === 1 ? (
+                      <img
+                        src={item.propertyDetails.imageUrl[0]}
+                        alt="single-image"
+                        style={{
+                          width: "100%",
+                          height: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <p>No images available</p>
+                    )}
+                    <div className="gallery_content">
+                      <div className="content">
+                        <h4>{item.propertyDetails.name}</h4>
+                        <span>{item.propertyDetails.category}</span>
+                        <span className="guests">
+                          <i className="fa-regular fa-user"></i> {item.guests}{" "}
+                          Guests
+                        </span>
+                      </div>
+                      <div className="links">
+                        <ul className="stars">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <li key={index}>
+                              <i
+                                className={`fa-solid fa-star ${
+                                  index < 4 ? "" : "fa-regular"
+                                }`}
+                              ></i>
+                            </li>
+                          ))}
+                        </ul>
+                        <button
+                        onClick={() => handleBooking(item)}
+                        className="btn btn-dark"
+                      >
+                        {item.totalAmount}/Night
+                      </button>
+                      </div>
+                    </div>
+                    <span className="watched">
+                      Booked {getTimeAgo(item.createdAt)}
+                    </span>
+                    <button className="add_to_wishlist">
+                      <i className="fa fa-heart" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="row">
-            <div className="col-sm-4">
-              <div className="property">
-                <Slider {...settings} className="gallery">
-                  <img src={seventhImg} alt="gallery-item" />
-                  <img src={eightImg} alt="gallery-item" />
-                  <img src={ninthImg} alt="gallery-item" />
-                  <img src={tenthImg} alt="gallery-item" />
-                </Slider>
-                <div className="gallery_content">
-                  <div className="content">
-                    <h4>Honey Hole</h4>
-                    <span>Waterfowl</span>
-                    <span className="guests">
-                      <i className="fa-regular fa-user"></i> 5 Guests
-                    </span>
-                  </div>
-                  <div className="links">
-                    <ul className="stars">
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <Link to="/propertydetail" className="btn btn-dark">
-                      $300/Night
-                    </Link>
-                  </div>
-                </div>
-                <span className="watched">Booked 10 Hours Ago</span>
-                <button className="add_to_wishlist">
-                  <i className="fa fa-heart" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div>
-
-            <div className="col-sm-4">
-              <div className="property">
-                <Slider {...settings} className="gallery">
-                  <img src={seventhImg} alt="gallery-item" />
-                  <img src={eightImg} alt="gallery-item" />
-                  <img src={ninthImg} alt="gallery-item" />
-                  <img src={tenthImg} alt="gallery-item" />
-                </Slider>
-                <div className="gallery_content">
-                  <div className="content">
-                    <h4>Central Whitetail Hunts</h4>
-                    <span>Texas</span>
-                    <span className="guests">
-                      <i className="fa-regular fa-user"></i> 4 Guests
-                    </span>
-                  </div>
-                  <div className="links">
-                    <ul className="stars">
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <Link to="/propertydetail" className="btn btn-dark">
-                      $300/Night
-                    </Link>
-                  </div>
-                </div>
-                <span className="watched">Booked 10 Hours Ago</span>
-                <button className="add_to_wishlist">
-                  <i className="fa fa-heart" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div>
-
-            <div className="col-sm-4">
-              <div className="property">
-                <Slider {...settings} className="gallery">
-                  <img src={seventhImg} alt="gallery-item" />
-                  <img src={eightImg} alt="gallery-item" />
-                  <img src={ninthImg} alt="gallery-item" />
-                  <img src={tenthImg} alt="gallery-item" />
-                </Slider>
-                <div className="gallery_content">
-                  <div className="content">
-                    <h4>Honey Hole</h4>
-                    <span>Turkey</span>
-                    <span className="guests">
-                      <i className="fa-regular fa-user"></i> 5 Guests
-                    </span>
-                  </div>
-                  <div className="links">
-                    <ul className="stars">
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i className="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <Link to="/propertydetail" className="btn btn-dark">
-                      $300/Night
-                    </Link>
-                  </div>
-                </div>
-                <span className="watched">Booked 10 Hours Ago</span>
-                <button className="add_to_wishlist">
-                  <i className="fa fa-heart" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="properties">
         <div className="container">
@@ -375,7 +344,11 @@ function Home() {
                           <img
                             src={image}
                             alt={`gallery-item-${index}`}
-                            style={{ width: "100%",  height: "200px",objectFit: "cover" }}
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
                           />
                         </div>
                       ))}
@@ -384,7 +357,11 @@ function Home() {
                     <img
                       src={property.imageUrl[0]}
                       alt="single-image"
-                      style={{ width: "100%",  height: "200px",objectFit: "cover" }}
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
                     />
                   ) : (
                     <p>No images available</p>
@@ -414,7 +391,7 @@ function Home() {
                         onClick={() => handlePropertyClick(property)}
                         className="btn btn-dark"
                       >
-                        ${property.pricing}/Night
+                        {property.pricing}/Night
                       </button>
                     </div>
                   </div>

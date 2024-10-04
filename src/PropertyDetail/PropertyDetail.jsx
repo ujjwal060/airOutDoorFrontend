@@ -1,9 +1,4 @@
-import React,{useState} from "react";
-import prop1 from "../images/property-1.jpg";
-import prop2 from "../images/property-2.jpg";
-import prop3 from "../images/property-3.jpg";
-import prop4 from "../images/property-4.jpg";
-import prop5 from "../images/property-5.jpg";
+import React, { useState } from "react";
 import nom1 from "../images/owner.png";
 import nom2 from "../images/phone-black.svg";
 import nom3 from "../images/chat.svg";
@@ -16,8 +11,11 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Calendar from "../Calendar/Calendar";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 function PropertyDetail() {
   const settings = {
@@ -33,10 +31,54 @@ function PropertyDetail() {
 
   const location = useLocation();
   const { property } = location.state || {};
+  const { bookingData } = location.state || {};
   const [currentMonth, setCurrentMonth] = useState(0);
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState("");
+  const [camper, setCamper] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const userId = localStorage.getItem("userId");
 
-  console.log(property);
-  
+  const validProperty = property && Object.keys(property).length > 0;
+  const validBookingData = bookingData && bookingData.propertyDetails;
+
+  const checkInDate = bookingData?.checkInDate || null;
+  const checkOutDate = bookingData?.checkOutDate || null;
+
+  const handleBookingSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const bookingData = {
+      propertyId: property._id,
+      userId,
+      checkIn,
+      checkOut,
+      guests,
+      camper,
+      totalAmount: property.pricing,
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/booking/book",
+        bookingData
+      );
+
+      if (response.status === 200) {
+        toast.success(response?.data?.message);
+        setCheckIn("");
+        setCheckOut("");
+        setGuests("");
+        setCamper(false);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePrevMonth = () => {
     setCurrentMonth(currentMonth - 1);
   };
@@ -51,73 +93,134 @@ function PropertyDetail() {
         <div class="container">
           <div class="row">
             <div class="col-lg-8">
-              <div class="property_detail">
-                <div class="property_header">
-                  <div class="content">
-                    <h4>{property.name}</h4>
-                    <span>{property.amenities}</span>
-                  </div>
-                  <div class="rating">
-                    <ul class="stars">
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="links">
-                    <p class="btn btn-dark">
-                    ${property.pricing}/Night
-                    </p>
-                  </div>
-                </div>
-                <div class="property_images">
-                  <img src={property.imageUrl[0]} alt="gallery-item" />
-                  <div class="d-flex flex-column gap-1">
-                    <img src={property.imageUrl[0]} alt="gallery-item" />
-                    <img src={property.imageUrl[0]} alt="gallery-item" />
-                  </div>
-                  <div class="d-flex flex-column gap-1">
-                    <img src={property.imageUrl[0]} alt="gallery-item" />
-                    <img src={property.imageUrl[0]} alt="gallery-item" />
-                  </div>
-                </div>
-                <div class="gallery_content">
-                  <span>
-                    Waterfowl <img src={nom5} alt="" />
-                  </span>
-                  <span>
-                    Check Availability{" "}
-                    <i class="fa fa-long-arrow-down" aria-hidden="true"></i>
-                  </span>
-                </div>
-                <div class="description">
-                  <h4>Listing Description</h4>
-                  <p>{property.description}</p>
-                </div>
+              <div className="property_detail">
+                {validProperty || validBookingData ? (
+                  <>
+                    <div className="property_header">
+                      <div className="content">
+                        <h4>
+                          {validProperty
+                            ? property.name
+                            : bookingData.propertyDetails.name}
+                        </h4>
+                        <span>
+                          {validProperty
+                            ? property.amenities
+                            : bookingData.propertyDetails.amenities}
+                        </span>
+                      </div>
+                      <div className="rating">
+                        <ul className="stars">
+                          <li>
+                            <i className="fa-solid fa-star"></i>
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-star"></i>
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-star"></i>
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-star"></i>
+                          </li>
+                          <li>
+                            <i className="fa-regular fa-star"></i>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="links">
+                        <p className="btn btn-dark">
+                          $
+                          {validProperty
+                            ? property.pricing
+                            : bookingData.propertyDetails.pricing}
+                          /Night
+                        </p>
+                      </div>
+                    </div>
+                    <div className="property_images">
+                      <img
+                        src={
+                          validProperty
+                            ? property.imageUrl[0]
+                            : bookingData.propertyDetails.imageUrl[0]
+                        }
+                        alt="gallery-item"
+                      />
+                      <div className="d-flex flex-column gap-1">
+                        <img
+                          src={
+                            validProperty
+                              ? property.imageUrl[0]
+                              : bookingData.propertyDetails.imageUrl[0]
+                          }
+                          alt="gallery-item"
+                        />
+                        <img
+                          src={
+                            validProperty
+                              ? property.imageUrl[0]
+                              : bookingData.propertyDetails.imageUrl[0]
+                          }
+                          alt="gallery-item"
+                        />
+                      </div>
+                      <div className="d-flex flex-column gap-1">
+                        <img
+                          src={
+                            validProperty
+                              ? property.imageUrl[0]
+                              : bookingData.propertyDetails.imageUrl[0]
+                          }
+                          alt="gallery-item"
+                        />
+                        <img
+                          src={
+                            validProperty
+                              ? property.imageUrl[0]
+                              : bookingData.propertyDetails.imageUrl[0]
+                          }
+                          alt="gallery-item"
+                        />
+                      </div>
+                    </div>
+                    <div className="gallery_content">
+                      <span>
+                        Waterfowl <img src={nom5} alt="" />
+                      </span>
+                      <span>
+                        Check Availability{" "}
+                        <i
+                          className="fa fa-long-arrow-down"
+                          aria-hidden="true"
+                        ></i>
+                      </span>
+                    </div>
+                    <div className="description">
+                      <h4>Listing Description</h4>
+                      <p>
+                        {validProperty
+                          ? property.description
+                          : bookingData.propertyDetails.description}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div>No property or booking details available.</div>
+                )}
               </div>
             </div>
             <div class="col-lg-4">
               <div class="property_booking">
                 <h2 class="text-center mb-4">Book Now</h2>
-                <form action="">
+                <form onSubmit={handleBookingSubmit}>
                   <input
                     type="date"
                     id="check-in"
                     class="form-control mb-4"
                     name="check-in"
-                    value=""
+                    value={checkIn}
+                    onChange={(e) => setCheckIn(e.target.value)}
                     required
                   />
                   <input
@@ -125,14 +228,16 @@ function PropertyDetail() {
                     id="check-out"
                     class="form-control mb-4"
                     name="check-in"
-                    value=""
+                    value={checkOut}
+                    onChange={(e) => setCheckOut(e.target.value)}
                     required
                   />
                   <select
                     id="guests"
                     class="form-control mb-4"
                     name="guests"
-                    value=""
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
                     required
                   >
                     <option value="">Guests</option>
@@ -143,15 +248,29 @@ function PropertyDetail() {
                     <option value="5">5</option>
                   </select>
                   <div class="compare">
-                    <label for="">
-                      <input type="checkbox" name="compare" id="" /> Camper
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="compare"
+                        checked={camper}
+                        onChange={(e) => setCamper(e.target.checked)}
+                      />{" "}
+                      Camper
                     </label>
-                    <div class="divider"></div>
-                    <a href="#" class="btn btn-light">
-                      $300/Night
-                    </a>
+                    <div className="divider"></div>
+                    <span className="btn btn-light">
+                      {validProperty
+                        ? property.pricing
+                        : bookingData.propertyDetails.pricing}{" "}
+                      /Night
+                    </span>
                   </div>
-                  <input type="submit" value="Submit" class="submit_btn" />
+                  <input
+                    type="submit"
+                    class="submit_btn"
+                    value={loading ? "Submitting..." : "Submit"}
+                    disabled={loading}
+                  />
                   <hr />
                   <div class="d-flex justify-content-around">
                     <button class="btn btn-outline">Add to Favourites</button>
@@ -239,7 +358,11 @@ function PropertyDetail() {
                       >
                         &lt;
                       </button>
-                      <Calendar monthOffset={currentMonth} />
+                      <Calendar
+                        monthOffset={currentMonth}
+                        checkInDate={checkInDate}
+                        checkOutDate={checkOutDate}
+                      />
                     </div>
                     <div className="col-md-6 position-relative">
                       <button
@@ -248,7 +371,11 @@ function PropertyDetail() {
                       >
                         &gt;
                       </button>
-                      <Calendar monthOffset={currentMonth+1} />
+                      <Calendar
+                        monthOffset={currentMonth + 1}
+                        checkInDate={checkInDate}
+                        checkOutDate={checkOutDate}
+                      />
                     </div>
                   </div>
                 </div>
@@ -391,6 +518,7 @@ function PropertyDetail() {
           referrerpolicy="no-referrer-when-downgrade"
         />
       </section>
+      <ToastContainer />
     </div>
   );
 }

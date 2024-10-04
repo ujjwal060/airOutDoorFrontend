@@ -73,4 +73,10 @@
     padding: 10px 16px 10px 16px;
     border-radius: 2px;
   }
+
+  .booked-day {
+    background-color: pink;
+    color: white;
+  }
+  
   

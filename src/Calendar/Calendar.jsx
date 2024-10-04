@@ -1,7 +1,7 @@
 import React from 'react';
 import './calendar.css';
 
-const Calendar = ({ monthOffset }) => {
+const Calendar = ({ monthOffset, checkInDate, checkOutDate }) => {
   const today = new Date();
   const currentDate = new Date();
   const displayedMonth = new Date(currentDate.setMonth(currentDate.getMonth() + monthOffset));
@@ -21,10 +21,14 @@ const Calendar = ({ monthOffset }) => {
     daysOfCurrentMonth.push(i);
   }
 
+  const formatDate = (date) => {
+    return date instanceof Date && !isNaN(date) ? date.toISOString().split('T')[0] : null;
+  };
+
   return (
     <div className="calendar-container">
       <div className="calendar-header">
-        <h2 style={{textAlign: "center"}}>
+        <h2 style={{ textAlign: "center" }}>
           {displayedMonth.toLocaleString('default', { month: 'long' })} {displayedMonth.getFullYear()}
         </h2>
       </div>
@@ -42,15 +46,36 @@ const Calendar = ({ monthOffset }) => {
         ))}
 
         {daysOfCurrentMonth.map((day, index) => {
-          const isToday = 
+          const dateToCheck = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth(), day);
+          const formattedDate = formatDate(dateToCheck);
+          
+          const checkInDay = new Date(checkInDate).getDate();
+          const checkInMonth = new Date(checkInDate).getMonth();
+          const checkInYear = new Date(checkInDate).getFullYear();
+
+          const checkOutDay = new Date(checkOutDate).getDate();
+          const checkOutMonth = new Date(checkOutDate).getMonth();
+          const checkOutYear = new Date(checkOutDate).getFullYear();
+
+          const isCheckIn = (day === checkInDay && displayedMonth.getMonth() === checkInMonth && displayedMonth.getFullYear() === checkInYear);
+          const isCheckOut = (day === checkOutDay && displayedMonth.getMonth() === checkOutMonth && displayedMonth.getFullYear() === checkOutYear);
+          const isToday =
             day === today.getDate() &&
             displayedMonth.getMonth() === today.getMonth() &&
             displayedMonth.getFullYear() === today.getFullYear();
-            
+
+          const isInRange = checkInDate && checkOutDate &&
+            (dateToCheck >= new Date(checkInDate) && dateToCheck < new Date(checkOutDate));
+
           return (
             <div
               key={index}
-              className={`calendar-day current-month-day ${isToday ? 'current-day' : ''}`}
+              className={`calendar-day current-month-day 
+                ${isToday ? 'current-day' : ''} 
+                ${isCheckIn ? 'check-in-day' : ''} 
+                ${isCheckOut ? 'check-out-day' : ''} 
+                ${isInRange ? 'booked-day' : ''}`}
+              style={isCheckIn || isCheckOut ? { backgroundColor: 'pink', color: 'white' } : {}}
             >
               {day}
             </div>
