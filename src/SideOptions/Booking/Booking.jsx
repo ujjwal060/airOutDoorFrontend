@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Img1 from "../../images/1.png";
 import Img2 from "../../images/2.png";
 import Img3 from "../../images/3.png";
@@ -11,6 +11,10 @@ import Slider from "react-slick";
 import NextArrow from "../../Arrow/NextArrow";
 import PrevArrow from "../../Arrow/PrevArrow";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 function Booking() {
   const settings = {
@@ -23,6 +27,31 @@ function Booking() {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+
+  const [bookings, setBookings] = useState([]);
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
+
+  const fetchBooking = async () => {
+    try {
+      const response = await axios.get(
+        `http://44.196.192.232:8000/booking/book/${userId}`
+      );
+      setBookings(response.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+
+  const handleBooking = (bookingData) => {
+    navigate("/propertydetail", { state: { bookingData } });
+  };
+
+  useEffect(() => {
+    fetchBooking();
+  }, []);
+
   return (
     <div className="booking">
       <SecondNav />
@@ -49,153 +78,85 @@ function Booking() {
           </div>
         </div>
       </div>
-      <section class="pt-5">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="property">
-                <Slider {...settings} className="gallery">
-                  <img src={Img2} alt="gallery-item" />
-                  <img src={Img1} alt="gallery-item" />
-                  <img src={Img3} alt="gallery-item" />
-                  <img src={Img4} alt="gallery-item" />
-                </Slider>
-                <div class="gallery_content">
-                  <div class="content">
-                    <h4>Honey Hole</h4>
-                    <span>Waterfowl</span>
-                    <span class="guests">
-                      <i class="fa-regular fa-user"></i> 5 Guests
-                    </span>
+      <section className="pt-5">
+        <div className="container">
+          <div className="row">
+            {bookings.map((booking) => (
+              <div className="col-lg-3 col-md-6" key={booking._id}>
+                <div className="property">
+                  {booking.propertyDetails.imageUrl.length > 1 ? (
+                    <Slider {...settings} className="gallery">
+                      {booking.propertyDetails.imageUrl.map((image, index) => (
+                        <div key={index}>
+                          <img
+                            src={image}
+                            alt={`gallery-item-${index}`}
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  ) : booking.propertyDetails.imageUrl.length === 1 ? (
+                    <img
+                      src={booking.propertyDetails.imageUrl[0]}
+                      alt="single-image"
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <p>No images available</p>
+                  )}
+                  <div className="gallery_content">
+                    <div className="content">
+                      <h4>{booking.propertyDetails.name}</h4>
+                      <span>{booking.propertyDetails.category}</span>
+                      <span className="guests">
+                        <i className="fa-regular fa-user"></i> {booking.guests}{" "}
+                        Guest{booking.guests > 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <div className="links">
+                      <ul className="stars">
+                        {[...Array(5)].map((_, index) => (
+                          <li key={index}>
+                            <i
+                              className={
+                                index < 4
+                                  ? "fa-solid fa-star"
+                                  : "fa-regular fa-star"
+                              }
+                            ></i>
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        onClick={() => handleBooking(booking)}
+                        className="btn btn-dark"
+                      >
+                        {booking.totalAmount}/Night
+                      </button>
+                    </div>
                   </div>
-                  <div class="links">
-                    <ul class="stars">
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <a href="#" class="btn btn-dark">
-                      $300/Night
-                    </a>
-                  </div>
+                  <span className="comment_div">
+                    <img src={Img5} alt="" /> Share Your Experience
+                  </span>
+                  <button className="booked_div">
+                    <i className="fa-solid fa-arrows-rotate"></i> Rebook
+                  </button>
                 </div>
-                <span class="comment_div">
-                  <img src="images/typing.svg" alt="" /> Share Your Experience
-                </span>
-                <button class="booked_div">
-                  <i class="fa-solid fa-arrows-rotate"></i> Rebook
-                </button>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="property">
-                <Slider {...settings} className="gallery">
-                  <img src={Img1} alt="gallery-item" />
-                  <img src={Img2} alt="gallery-item" />
-                  <img src={Img3} alt="gallery-item" />
-                  <img src={Img4} alt="gallery-item" />
-                </Slider>
-                <div class="gallery_content">
-                  <div class="content">
-                    <h4>Central Whitetail Hunts</h4>
-                    <span>Texas</span>
-                    <span>
-                      <i class="fa-regular fa-user"></i> 4 Guests
-                    </span>
-                  </div>
-                  <div class="links">
-                    <ul class="stars">
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <a href="#" class="btn btn-dark">
-                      $300/Night
-                    </a>
-                  </div>
-                </div>
-                <span class="comment_div">
-                  <img src={Img5} alt="" /> Share Your Experience
-                </span>
-                <button class="booked_div">
-                  <i class="fa-solid fa-arrows-rotate"></i> Rebook
-                </button>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="property">
-                <Slider {...settings} className="gallery">
-                  <img src={Img3} alt="gallery-item" />
-                  <img src={Img2} alt="gallery-item" />
-                  <img src={Img1} alt="gallery-item" />
-                  <img src={Img4} alt="gallery-item" />
-                </Slider>
-                <div class="gallery_content">
-                  <div class="content">
-                    <h4>Honey Hole</h4>
-                    <span>Turkey</span>
-                    <span class="guests">
-                      <i class="fa-regular fa-user"></i> 5 Guests
-                    </span>
-                  </div>
-                  <div class="links">
-                    <ul class="stars">
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-solid fa-star"></i>
-                      </li>
-                      <li>
-                        <i class="fa-regular fa-star"></i>
-                      </li>
-                    </ul>
-                    <a href="#" class="btn btn-dark">
-                      $300/Night
-                    </a>
-                  </div>
-                </div>
-                <span class="comment_div">
-                  <img src={Img5} alt="" /> Share Your Experience
-                </span>
-                <button class="booked_div">
-                  <i class="fa-solid fa-arrows-rotate"></i> Rebook
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
+      <ToastContainer/>
     </div>
   );
 }
