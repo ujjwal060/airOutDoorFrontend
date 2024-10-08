@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import logo from "../images/logo.png";
@@ -25,20 +25,35 @@ function Header() {
   const { isLoggedIn, logout } = useAuth();
   const [userdata, setUser] = useState("");
   const navigate = useNavigate();
+  const menuRef = useRef(null); // Reference to the menu
 
- useEffect(() => {
-  if (userId && token && !userdata) {
-    fetch();
-  }
-  
-  if (!userId || !token) {
-    navigate("/");
-  }
-}, [userId, token, userdata]);
+  useEffect(() => {
+    if (userId && token && !userdata) {
+      fetch();
+    }
 
-  const toggleMenu = (event) => {
-    setMenuOpen(!menuOpen);
+    if (!userId || !token) {
+      navigate("/");
+    }
+  }, [userId, token]);
+
+  const toggleMenu = () => {
+    setMenuOpen((prevMenuOpen) => !prevMenuOpen);
   };
+
+  // Close the menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false); // Close the menu if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   const handleLogout = () => {
     logout();
@@ -56,7 +71,6 @@ function Header() {
       toast.error(error.response?.data?.message);
     }
   };
-
 
   return (
     <div className="header">
@@ -93,11 +107,15 @@ function Header() {
               ) : (
                 <>
                   <div className="menu1">
-                    <a href="#" className="menu" onClick={toggleMenu}>
+                    <button
+                      className="menu"
+                      onClick={toggleMenu}
+                      style={{ background: "none", border: "none" }}
+                    >
                       <img src={menu} alt="Menu" />
-                    </a>
+                    </button>
                     {menuOpen && (
-                      <div className="menu_dropdown">
+                      <div className="menu_dropdown" ref={menuRef}>
                         <div className="user">
                           <img src={user} alt="User" />
                           {userdata.username}
@@ -125,14 +143,11 @@ function Header() {
                           </li>
                           <li>
                             <Link to="notification" className="link-menu">
-                              <img src={fifth} alt="Notifications" />{" "}
-                              Notifications
+                              <img src={fifth} alt="Notifications" /> Notifications
                             </Link>
                           </li>
                           <li>
-                            {/* Trigger the modal */}
                             <Link
-                              to="#"
                               data-bs-toggle="modal"
                               data-bs-target="#logoutModal"
                               className="link-menu"
@@ -159,14 +174,9 @@ function Header() {
           aria-hidden="true"
         >
           <div className="modal-dialog modal-dialog-centered">
-            {" "}
-            {/* Ensures modal is centered */}
             <div className="modal-content custom-modal">
               <div className="modal-header">
-                <h5
-                  className="modal-title w-100 text-center"
-                  id="logoutModalLabel"
-                >
+                <h5 className="modal-title w-100 text-center" id="logoutModalLabel">
                   Confirm Logout
                 </h5>
               </div>
