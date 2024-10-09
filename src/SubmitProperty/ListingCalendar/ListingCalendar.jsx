@@ -11,22 +11,22 @@ function ListingCalendar() {
           <div className="row">
             <div className="col-sm-12">
               <h1 className="text-center listh1">Add New Listing</h1>
-              <form action="" className="add_listing">
+              <form action="" className="add_listing" onSubmit={(e) => e.preventDefault()}>
                 <div className="inner_div">
                   <h1>Calendar</h1>
                   <p className="mb-4">• All Items Are Mandatory</p>
                   <h2 className="mb-5">Pick The Dates For Check-in & Check-Out</h2>
                   <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                       <div className="field">
                         <Calendar1 monthOffset={0} />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="field">
                         <Calendar1 monthOffset={1} />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="field">
                     <label htmlFor="property_description">

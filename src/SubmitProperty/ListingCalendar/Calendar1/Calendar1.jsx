@@ -22,11 +22,13 @@ const Calendar1 = ({ initialMonthOffset = 0 }) => {
     daysOfCurrentMonth.push(i);
   }
 
-  const handlePrevMonth = () => {
+  const handlePrevMonth = (event) => {
+    event.preventDefault();
     setMonthOffset((prevOffset) => prevOffset - 1);
   };
 
-  const handleNextMonth = () => {
+  const handleNextMonth = (event) => {
+    event.preventDefault();
     setMonthOffset((prevOffset) => prevOffset + 1);
   };
 
