@@ -10,7 +10,6 @@ function ListingImage() {
   const location = useLocation();
   const formData = location.state?.formData || {};
   const navigate = useNavigate();
-console.log(formData);
 
   const handleImgUpload = (e) => {
     const newImages = Array.from(e.target.files);

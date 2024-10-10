@@ -1,82 +1,134 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function ListingLocation() {
+  const location = useLocation();
+  const previousData = location.state?.formData || {};
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    address: "",
+    city: "",
+    zip_code: "",
+    state: "",
+    country: "",
+    latitude: "",
+    longitude: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleMapClick = (lat, lng) => {
+    setFormData({
+      ...formData,
+      latitude: lat,
+      longitude: lng,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const combinedData = {
+      ...previousData,
+      ...formData,
+    };
+
+    navigate("/listingcalendar", { state: { formData: combinedData } });
+  };
+
   return (
     <div className="listinglocation">
-      <section class="pt-5 pb-4">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12">
-              <h1 class="text-center listh1">Add New Listing</h1>
-              <form action="" class="add_listing">
-                <div class="inner_div_location">
+      <section className="pt-5 pb-4">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12">
+              <h1 className="text-center listh1">Add New Listing</h1>
+              <form onSubmit={handleSubmit} className="add_listing">
+                <div className="inner_div_location">
                   <h1>Location</h1>
-                  <h2 class="text-center">Select Location</h2>
-                  <p class="text-center">Pin on location to select</p>
-                  <p class="mb-5">All Items Are Mandatory</p>
+                  <h2 className="text-center">Select Location</h2>
+                  <p className="text-center">Pin on location to select</p>
+                  <p className="mb-5">All Items Are Mandatory</p>
 
-                  <div class="list-location">
-                    <div class="field">
+                  <div className="list-location">
+                    <div className="field">
                       <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3336.065138765954!2d-87.60868392480825!3d33.26478695890013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88861c9128aaaddb%3A0x86dc7c4543f62e8c!2sHwy%20171%20Cutoff%20Rd%2C%20Alabama%2035473%2C%20USA!5e0!3m2!1sen!2sin!4v1725186665986!5m2!1sen!2sin"
+                        // Google Maps iframe
+                        src="https://www.google.com/maps/embed?pb=YOUR_EMBED_URL"
                         width="100%"
                         height="250"
                         style={{ border: "0" }}
-                        allowfullscreen=""
+                        allowFullScreen=""
                         loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
+                        referrerPolicy="no-referrer-when-downgrade"
                       ></iframe>
-                      <p class="text-center">Or Enter Manually</p>
+                      <p className="text-center">Or Enter Manually</p>
                     </div>
-                    <div class="field">
-                      <label for="address">Address(Not Mandatory)</label>
+                    <div className="field">
+                      <label htmlFor="address">Address(Not Mandatory)</label>
                       <input
                         type="text"
                         name="address"
-                        class="form-control"
+                        className="form-control"
                         placeholder="Enter Your Address"
+                        value={formData.address}
+                        onChange={handleInputChange}
                       />
                     </div>
-                    <div class="field">
-                      <label for="city">City(Not Mandatory)</label>
+                    <div className="field">
+                      <label htmlFor="city">City(Not Mandatory)</label>
                       <input
                         type="text"
                         name="city"
-                        class="form-control"
+                        className="form-control"
                         placeholder="Enter City Name"
+                        value={formData.city}
+                        onChange={handleInputChange}
                       />
                     </div>
-                    <div class="field">
-                      <label for="zip_code">Zip Code(Not Mandatory)</label>
+                    <div className="field">
+                      <label htmlFor="zip_code">Zip Code(Not Mandatory)</label>
                       <input
                         type="text"
                         name="zip_code"
-                        class="form-control"
+                        className="form-control"
                         placeholder="Enter Zip Code"
+                        value={formData.zip_code}
+                        onChange={handleInputChange}
                       />
                     </div>
-                    <div class="field">
-                      <label for="state">State(Mandatory)</label>
+                    <div className="field">
+                      <label htmlFor="state">State(Mandatory)</label>
                       <input
                         type="text"
                         name="state"
-                        class="form-control"
-                        placeholder="Enter Zip Code"
+                        className="form-control"
+                        placeholder="Enter State"
+                        value={formData.state}
+                        onChange={handleInputChange}
                       />
                     </div>
-                    <div class="field">
-                      <label for="zip_code">Country(Mandatory)</label>
+                    <div className="field">
+                      <label htmlFor="country">Country(Mandatory)</label>
                       <input
                         type="text"
                         name="country"
-                        class="form-control"
-                        placeholder="Enter Zip Code"
+                        className="form-control"
+                        placeholder="Enter Country"
+                        value={formData.country}
+                        onChange={handleInputChange}
                       />
                     </div>
-                    <div class="field">
-                      <label for="instant_booking">
+                    <div className="field">
+                      <label htmlFor="address">
                         Physical Address Location will not be visible to users
                         on the AirOutdoors site. Once Airoutdoors and the Vendor
                         have approved a booking request, the approved user will
@@ -84,34 +136,32 @@ function ListingLocation() {
                       </label>
                     </div>
                   </div>
-                  <Link to="/listingcalendar">
-                    <input
-                      type="submit"
-                      class="submit_btn"
-                      value="Save & Next"
-                    />
-                  </Link>
+                  <input
+                    type="submit"
+                    className="submit_btn"
+                    value="Save & Next"
+                  />
                 </div>
-                <div class="sidebar">
-                  <div class="steps">
-                    <div class="line"></div>
-                    <div class="step active">
-                      <span><i class='bx bx-check'></i></span> Description
+                <div className="sidebar">
+                  <div className="steps">
+                    <div className="line"></div>
+                    <div className="step active">
+                      <span><i className='bx bx-check'></i></span> Description
                     </div>
-                    <div class="step active">
-                      <span><i class='bx bx-check'></i></span> Price
+                    <div className="step active">
+                      <span><i className='bx bx-check'></i></span> Price
                     </div>
-                    <div class="step active">
-                      <span><i class='bx bx-check'></i></span> Images
+                    <div className="step active">
+                      <span><i className='bx bx-check'></i></span> Images
                     </div>
-                    <div class="step active">
-                      <span><i class='bx bx-check'></i></span> Details
+                    <div className="step active">
+                      <span><i className='bx bx-check'></i></span> Details
                     </div>
-                    <div class="step active">
+                    <div className="step active">
                       <span>5</span> Location
                     </div>
-                    <div class="step">
-                      <span>6</span> Calender
+                    <div className="step">
+                      <span>6</span> Calendar
                     </div>
                   </div>
                 </div>
