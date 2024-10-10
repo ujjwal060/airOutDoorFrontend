@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function ListingPrice() {
-  const [minRange, setMinRange] = useState(0);
-  const [maxRange, setMaxRange] = useState(500);
+  const location = useLocation();
+  const formData = location.state?.formData;
+  const navigate = useNavigate();
+
+  const [minRange, setMinRange] = useState(1000);
+  const [maxRange, setMaxRange] = useState(0);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleMinChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -20,32 +25,52 @@ function ListingPrice() {
     }
   };
 
+  const handleTermsChange = (e) => {
+    setTermsAccepted(e.target.checked);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!termsAccepted) {
+      alert("Please accept the terms and conditions.");
+      return;
+    }
+
+    const dataToPass = {
+      ...formData,
+      priceRange: { min: minRange, max: maxRange },
+    };
+
+    navigate("/listingimage", { state: { formData: dataToPass } });
+  };
+
   return (
     <div className="listingprice">
-      <section class="pt-5 pb-4">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12">
-              <h1 class="text-center listh1">Add New Listing</h1>
-              <form action="" class="add_listing">
-                <div class="inner_div">
+      <section className="pt-5 pb-4">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12">
+              <h1 className="text-center listh1">Add New Listing</h1>
+              <form onSubmit={handleSubmit} className="add_listing">
+                <div className="inner_div">
                   <h1>Pricing</h1>
                   <h4>How many do you want to charge per night?</h4>
                   <h6 className="mt-4">
                     Price Range from ${minRange} to ${maxRange}
                   </h6>
-                  <div class="range-slider mb-4">
-                    <div class="values">
-                      Price range from $<span id="minValue">20</span> to $
-                      <span id="maxValue">80</span>
+                  <div className="range-slider mb-4">
+                    <div className="values">
+                      Price range from $<span id="minValue">{minRange}</span> to $
+                      <span id="maxValue">{maxRange}</span>
                     </div>
-                    <div class="range">
+                    <div className="range">
                       <input
                         type="range"
                         id="minRange"
                         name="minRange"
-                        min="0"
-                        max="500"
+                        min="1000"
+                        max="50000"
                         value={minRange}
                         onChange={handleMinChange}
                       />
@@ -53,15 +78,15 @@ function ListingPrice() {
                         type="range"
                         id="maxRange"
                         name="maxRange"
-                        min="0"
-                        max="500"
+                        min="1000"
+                        max="50000"
                         value={maxRange}
                         onChange={handleMaxChange}
                       />
                     </div>
                   </div>
                   <p style={{ marginTop: "50px" }}>
-                    To attract wider range we suggest you to setting up multiple
+                    To attract a wider range we suggest you to setting up multiple
                     rate plans.
                   </p>
                   <div className="guest-range">
@@ -98,7 +123,7 @@ function ListingPrice() {
                     <div className="guest-inner1">
                       <h6>Guests</h6>
                       <h4>
-                        <i class="bx bxs-user"></i> ⨯ 3
+                        <i className="bx bxs-user"></i> ⨯ 3
                       </h4>
                     </div>
                     <div
@@ -113,7 +138,7 @@ function ListingPrice() {
                     <div className="guest-inner1">
                       <h6>Guests</h6>
                       <h4>
-                        <i class="bx bxs-user"></i> ⨯ 2
+                        <i className="bx bxs-user"></i> ⨯ 2
                       </h4>
                     </div>
                     <div
@@ -128,7 +153,7 @@ function ListingPrice() {
                     <div className="guest-inner1">
                       <h6>Guests</h6>
                       <h4>
-                        <i class="bx bxs-user"></i> ⨯ 1
+                        <i className="bx bxs-user"></i> ⨯ 1
                       </h4>
                     </div>
                     <div
@@ -139,49 +164,53 @@ function ListingPrice() {
                       <h4>$600</h4>
                     </div>
                   </div>
-                  <div class="field">
-                    <label for="instant_booking">
-                      <input type="checkbox" name="instant_booking" id="" />
+                  <div className="field">
+                    <label htmlFor="termsAccepted">
+                      <input
+                        type="checkbox"
+                        name="termsAccepted"
+                        id="termsAccepted"
+                        checked={termsAccepted}
+                        onChange={handleTermsChange}
+                      />
                       <a
                         href="##"
-                        class="text-dark"
+                        className="text-dark"
                         style={{ marginLeft: "10px" }}
                       >
-                        Cancellation Policy
+                        Accept Terms and Conditions
                       </a>
                     </label>
                   </div>
-                  <Link to="/listingimage">
-                    <input
-                      type="submit"
-                      class="submit_btn"
-                      value="Save & Next"
-                    />
-                  </Link>
+                  <input
+                    type="submit"
+                    className="submit_btn"
+                    value="Save & Next"
+                  />
                 </div>
-                <div class="sidebar">
-                  <div class="steps">
-                    <div class="line"></div>
-                    <div class="step active">
+                <div className="sidebar">
+                  <div className="steps">
+                    <div className="line"></div>
+                    <div className="step active">
                       <span>
-                        <i class="bx bx-check"></i>
+                        <i className="bx bx-check"></i>
                       </span>{" "}
                       Description
                     </div>
-                    <div class="step active">
+                    <div className="step active">
                       <span>2</span> Price
                     </div>
-                    <div class="step">
+                    <div className="step">
                       <span>3</span> Images
                     </div>
-                    <div class="step">
+                    <div className="step">
                       <span>4</span> Details
                     </div>
-                    <div class="step">
+                    <div className="step">
                       <span>5</span> Location
                     </div>
-                    <div class="step">
-                      <span>6</span> Calender
+                    <div className="step">
+                      <span>6</span> Calendar
                     </div>
                   </div>
                 </div>

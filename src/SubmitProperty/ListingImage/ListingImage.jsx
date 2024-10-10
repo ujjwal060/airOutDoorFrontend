@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import UploadImg from "../../images/Upload icon.png";
 
 function ListingImage() {
   const [images, setImages] = useState([]);
   const [errorMess, setErrorMess] = useState("");
+  
+  const location = useLocation();
+  const formData = location.state?.formData || {};
+  const navigate = useNavigate();
+console.log(formData);
 
   const handleImgUpload = (e) => {
     const newImages = Array.from(e.target.files);
@@ -29,18 +34,34 @@ function ListingImage() {
     document.getElementById("img-upload").click();
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (images.length < 4) {
+      setErrorMess("Please upload at least 4 images.");
+      return;
+    }
+
+    
+    const dataToPass = {
+      ...formData,
+      images: images,
+    };
+
+    navigate("/listingdetails", { state: { formData: dataToPass } });
+  };
 
   return (
     <div className="listingimage">
-      <section class="pt-5 pb-4">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12">
-              <h1 class="text-center listh1">Add New Listing</h1>
-              <form action="" class="add_listing">
-                <div class="inner_div">
+      <section className="pt-5 pb-4">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12">
+              <h1 className="text-center listh1">Add New Listing</h1>
+              <form onSubmit={handleSubmit} className="add_listing">
+                <div className="inner_div">
                   <h1>Upload Images</h1>
-                  <p class="mb-5">• All Items Are Mandatory</p>
+                  <p className="mb-5">• All Items Are Mandatory</p>
                   <h2 style={{ textAlign: "center" }}>Upload</h2>
                   <div className="upload-img">
                     <img src={UploadImg} alt="Upload-icon" />
@@ -57,11 +78,11 @@ function ListingImage() {
                             textDecoration: "underline",
                           }}
                         >
-                          Browser
+                          Browse
                         </span>
                       </label>
                     </h4>
-                    <p>Supported formates: JPEG, PNG</p>
+                    <p>Supported formats: JPEG, PNG</p>
                     <input
                       id="img-upload"
                       type="file"
@@ -71,12 +92,14 @@ function ListingImage() {
                     />
                   </div>
                   {images.length === 0 && (
-                    <button class="submit_btnImg">UPLOAD IMAGE</button>
+                    <button type="button" className="submit_btnImg">
+                      UPLOAD IMAGE
+                    </button>
                   )}
                   {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
                   {images.length > 0 && (
                     <div>
-                      <h3 class="mt-4">Uploading - {images.length}/ 4 Files</h3>
+                      <h3 className="mt-4">Uploading - {images.length}/4 Files</h3>
                       {images.map((image, index) => (
                         <div key={index} style={{ marginBottom: "10px" }}>
                           <div
@@ -112,40 +135,38 @@ function ListingImage() {
                     </div>
                   )}
                   <p>*Upload minimum 4 Images</p>
-                  <Link to="/listingdetails">
-                    <input
-                      type="submit"
-                      class="submit_btn"
-                      value="Save & Next"
-                    />
-                  </Link>
+                  <input
+                    type="submit"
+                    className="submit_btn"
+                    value="Save & Next"
+                  />
                 </div>
-                <div class="sidebar">
-                  <div class="steps">
-                    <div class="line"></div>
-                    <div class="step active">
+                <div className="sidebar">
+                  <div className="steps">
+                    <div className="line"></div>
+                    <div className="step active">
                       <span>
-                        <i class="bx bx-check"></i>
+                        <i className="bx bx-check"></i>
                       </span>{" "}
                       Description
                     </div>
-                    <div class="step active">
+                    <div className="step active">
                       <span>
-                        <i class="bx bx-check"></i>
+                        <i className="bx bx-check"></i>
                       </span>{" "}
                       Price
                     </div>
-                    <div class="step active">
+                    <div className="step active">
                       <span>3</span> Images
                     </div>
-                    <div class="step">
+                    <div className="step">
                       <span>4</span> Details
                     </div>
-                    <div class="step">
+                    <div className="step">
                       <span>5</span> Location
                     </div>
-                    <div class="step">
-                      <span>6</span> Calender
+                    <div className="step">
+                      <span>6</span> Calendar
                     </div>
                   </div>
                 </div>
