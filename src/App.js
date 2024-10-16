@@ -28,6 +28,7 @@ import Booking from './SideOptions/Booking/Booking';
 import Favorites from "./SideOptions/Favorites/Favorites";
 import Message from './SideOptions/Message/Message';
 import Notification from './SideOptions/Notification/Notification';
+import Chats from './Chats/Chats';
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './Protected'; 
 
@@ -63,6 +64,7 @@ function App() {
         <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
         <Route path="/message" element={<ProtectedRoute><Message /></ProtectedRoute>} />
         <Route path="/notification" element={<ProtectedRoute><Notification /></ProtectedRoute>} />
+        <Route path="/chats" element={<ProtectedRoute><Chats /></ProtectedRoute>} />
         <Route path="/" element={<Home />} />
       </Routes>
       {!noFooterPaths.includes(location.pathname) && <Footer />}
