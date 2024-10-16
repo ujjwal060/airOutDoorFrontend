@@ -48,13 +48,14 @@ function Home() {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
-  
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState();
   const [animalData, setAnimalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([]);
   const [booking, setBooking] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const userId = localStorage.getItem("userId");
 
   const fetchSubCatogry = async (category) => {
@@ -125,9 +126,50 @@ function Home() {
     navigate("/propertydetail", { state: { bookingData } });
   };
 
+  const addToFavorites = async (propertyId) => {
+    try {
+      await axios.post("http://44.196.192.232:8000/fav/addFav", {
+        userId,
+        propertyId,
+      });
+      fetchFavorites();
+      toast.success("Added to favorites!");
+    } catch (error) {
+      toast.error("Failed to add to favorites.");
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const response = await axios.get(
+        `http://44.196.192.232:8000/fav/getFav/${userId}`
+      );
+      setFavorites(response.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+
+  const removeFromFavorites = async (propertyId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete("http://44.196.192.232:8000/fav/deleteFav", {
+        data: { userId, propertyId },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchBooking();
+      fetchFavorites();
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
     fetchBooking();
+    fetchFavorites();
     if (activeTab) {
       fetchSubCatogry(activeTab);
     }
@@ -149,59 +191,6 @@ function Home() {
             <br />
             Conquer the Wild.
           </h1>
-          {/* <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${
-                  activeTab === "terrestrial" && "active"
-                }`}
-                onClick={() => handleTabClick("Terrestrial Animals")}
-              >
-                Terrestrial Animals <img src={firstImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "aquatic" && "active"}`}
-                onClick={() => handleTabClick("Aquatic Animals")}
-              >
-                Aquatic Animals <img src={secondImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "aerial" && "active"}`}
-                onClick={() => handleTabClick("Aerial Animals")}
-              >
-                Aerial Animals <img src={thirdImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "adventure" && "active"}`}
-                onClick={() => handleTabClick("Adventure Activities")}
-              >
-                Adventure Activities <img src={fourthImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "special" && "active"}`}
-                onClick={() => handleTabClick("Special Events")}
-              >
-                Special Events <img src={fifthImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "other" && "active"}`}
-                onClick={() => handleTabClick("Other")}
-              >
-                Other Activities <img src={sixthImg} alt="" />
-              </button>
-            </li>
-          </ul> */}
-
           <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
             <li className="nav-item" role="presentation">
               <button
@@ -519,7 +508,30 @@ function Home() {
                     <span className="watched">
                       Booked {getTimeAgo(item.createdAt)}
                     </span>
-                    <button className="add_to_wishlist">
+                    {/* <button className="add_to_wishlist">
+                      <i className="fa fa-heart" aria-hidden="true"></i>
+                    </button> */}
+                    <button
+                      className="add_to_wishlist"
+                      onClick={() => {
+                        if (
+                          favorites.some(
+                            (fav) => fav._id === item.propertyDetails._id
+                          )
+                        ) {
+                          removeFromFavorites(item.propertyDetails._id);
+                        } else {
+                          addToFavorites(item.propertyDetails._id);
+                        }
+                      }}
+                      style={{
+                        color: favorites.some(
+                          (fav) => fav._id === item.propertyDetails._id
+                        )
+                          ? "red"
+                          : "white",
+                      }}
+                    >
                       <i className="fa fa-heart" aria-hidden="true"></i>
                     </button>
                   </div>

@@ -52,7 +52,7 @@ function PropertyDetail() {
 
     const bookingData = {
       propertyId: property._id,
-      vendorId:property.vendorId,
+      vendorId: property.vendorId,
       userId,
       checkIn,
       checkOut,
@@ -131,7 +131,6 @@ function PropertyDetail() {
                       </div>
                       <div className="links">
                         <p className="btn btn-dark">
-                          $
                           {validProperty
                             ? property.pricing
                             : bookingData.propertyDetails.pricing}
@@ -141,50 +140,65 @@ function PropertyDetail() {
                     </div>
                     <div className="property_images">
                       <img
+                        className="fixed-image"
                         src={
-                          validProperty
+                          validProperty &&
+                          property.imageUrl &&
+                          property.imageUrl[0]
                             ? property.imageUrl[0]
-                            : bookingData.propertyDetails.imageUrl[0]
+                            : (bookingData.propertyDetails.imageUrl &&
+                                bookingData.propertyDetails.imageUrl[0]) ||
+                              "default-image.jpg"
                         }
                         alt="gallery-item"
                       />
+
                       <div className="d-flex flex-column gap-1">
                         <img
+                          className="fixed-image"
                           src={
-                            validProperty
-                              ? property.imageUrl[0]
-                              : bookingData.propertyDetails.imageUrl[0]
+                            validProperty &&
+                            property.imageUrl &&
+                            property.imageUrl[1]
+                              ? property.imageUrl[1]
+                              : (bookingData.propertyDetails.imageUrl &&
+                                  bookingData.propertyDetails.imageUrl[1]) ||
+                                "default-image.jpg"
                           }
                           alt="gallery-item"
                         />
                         <img
+                          className="fixed-image"
                           src={
-                            validProperty
-                              ? property.imageUrl[0]
-                              : bookingData.propertyDetails.imageUrl[0]
+                            validProperty &&
+                            property.imageUrl &&
+                            property.imageUrl[2]
+                              ? property.imageUrl[2]
+                              : (bookingData.propertyDetails.imageUrl &&
+                                  bookingData.propertyDetails.imageUrl[2]) ||
+                                "default-image.jpg"
                           }
                           alt="gallery-item"
                         />
                       </div>
+
                       <div className="d-flex flex-column gap-1">
                         <img
+                          className="fixed-image"
                           src={
-                            validProperty
-                              ? property.imageUrl[0]
-                              : bookingData.propertyDetails.imageUrl[0]
-                          }
-                          alt="gallery-item"
-                        />
-                        <img
-                          src={
-                            validProperty
-                              ? property.imageUrl[0]
-                              : bookingData.propertyDetails.imageUrl[0]
+                            validProperty &&
+                            property.imageUrl &&
+                            property.imageUrl[3]
+                              ? property.imageUrl[3]
+                              : (bookingData.propertyDetails.imageUrl &&
+                                  bookingData.propertyDetails.imageUrl[3]) ||
+                                "default-image.jpg"
                           }
                           alt="gallery-item"
                         />
                       </div>
                     </div>
+
                     <div className="gallery_content">
                       <span>
                         Waterfowl <img src={nom5} alt="" />
