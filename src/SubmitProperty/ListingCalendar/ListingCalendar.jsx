@@ -64,16 +64,16 @@ function ListingCalendar() {
                   <p className="mb-4">• All Items Are Mandatory</p>
                   <h2 className="mb-5">Pick The Dates For Check-in & Check-Out</h2>
                   <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                       <div className="field">
                         <Calendar1 monthOffset={0} onDateChange={(checkIn, checkOut) => handleDateChange(checkIn, checkOut)} />
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="field">
                         <Calendar1 monthOffset={1} onDateChange={(checkIn, checkOut) => handleDateChange(checkIn, checkOut)} />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="field">
                     <label htmlFor="property_description">Property Description</label>

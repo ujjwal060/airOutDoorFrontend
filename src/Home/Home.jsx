@@ -18,6 +18,12 @@ import eightImg1 from "../images/team1.png";
 import ninthImg1 from "../images/team2.png";
 import tenthImg1 from "../images/team3.png";
 import firstImg2 from "../images/kids-outdoor.png";
+import firstImg3 from "../images/deer-black.svg";
+import firstImg4 from "../images/eik.svg";
+import firstImg5 from "../images/hog.svg";
+import firstImg6 from "../images/menu-black.svg";
+import firstImg7 from "../images/turkey.svg";
+import firstImg8 from "../images/pigeon-black.svg";
 import bannerImg from "../images/banner.jpg";
 import bannerImg1 from "../images/kids-outdoor-bg.jpg";
 import "slick-carousel/slick/slick.css";
@@ -29,7 +35,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useAuth } from "../AuthContext";
-
 
 function Home() {
   const { isLoggedIn } = useAuth();
@@ -43,6 +48,7 @@ function Home() {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+  
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState();
   const [animalData, setAnimalData] = useState([]);
@@ -50,7 +56,6 @@ function Home() {
   const [properties, setProperties] = useState([]);
   const [booking, setBooking] = useState([]);
   const userId = localStorage.getItem("userId");
-
 
   const fetchSubCatogry = async (category) => {
     setLoading(true);
@@ -119,7 +124,6 @@ function Home() {
   const handleBooking = (bookingData) => {
     navigate("/propertydetail", { state: { bookingData } });
   };
-  
 
   useEffect(() => {
     fetchProperties();
@@ -145,7 +149,7 @@ function Home() {
             <br />
             Conquer the Wild.
           </h1>
-          <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
+          {/* <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
             <li className="nav-item" role="presentation">
               <button
                 className={`nav-link ${
@@ -196,8 +200,206 @@ function Home() {
                 Other Activities <img src={sixthImg} alt="" />
               </button>
             </li>
+          </ul> */}
+
+          <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${
+                  activeTab === "terrestrial" ? "active" : ""
+                }`}
+                onClick={() => handleTabClick("terrestrial")}
+              >
+                Terrestrial Animals <img src={firstImg} alt="" />
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${
+                  activeTab === "aquatic" ? "active" : ""
+                }`}
+                onClick={() => handleTabClick("aquatic")}
+              >
+                Aquatic Animals <img src={secondImg} alt="" />
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${activeTab === "aerial" ? "active" : ""}`}
+                onClick={() => handleTabClick("aerial")}
+              >
+                Aerial Animals <img src={thirdImg} alt="" />
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${
+                  activeTab === "adventure" ? "active" : ""
+                }`}
+                onClick={() => handleTabClick("adventure")}
+              >
+                Adventure Activities <img src={fourthImg} alt="" />
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${
+                  activeTab === "special" ? "active" : ""
+                }`}
+                onClick={() => handleTabClick("special")}
+              >
+                Special Events <img src={fifthImg} alt="" />
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${activeTab === "other" ? "active" : ""}`}
+                onClick={() => handleTabClick("other")}
+              >
+                Other Activities <img src={sixthImg} alt="" />
+              </button>
+            </li>
           </ul>
+
           <div className="tab-content position-relative" id="pills-tabContent">
+            {/* Terrestrial Animals Content */}
+            {activeTab === "terrestrial" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-terrestrial"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="deer.html" className="active">
+                    <img src={firstImg3} alt="" />
+                    <p>Deer</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg4} alt="" />
+                    <p>Eik</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg5} alt="" />
+                    <p>Hog</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg6} alt="" />
+                    <p>Other Hunting</p>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Aquatic Animals Content */}
+            {activeTab === "aquatic" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-aquatic"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="deer.html" className="active">
+                    <img src={firstImg3} alt="" />
+                    <p>Deer</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg4} alt="" />
+                    <p>Eik</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg5} alt="" />
+                    <p>Hog</p>
+                  </a>
+                  <a href="deer.html">
+                    <img src={firstImg6} alt="" />
+                    <p>Other Hunting</p>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Aerial Animals Content */}
+            {activeTab === "aerial" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-aerial"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="bird.html" className="active">
+                    <img src={firstImg7} alt="" />
+                    <p>Turkey</p>
+                  </a>
+                  <a href="dove.html">
+                    <img src={firstImg8} alt="" />
+                    <p>Dove</p>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Adventure Activities Content */}
+            {activeTab === "adventure" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-adventure"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="bird.html" className="active">
+                    <img src={firstImg7} alt="" />
+                    <p>Turkey</p>
+                  </a>
+                  <a href="dove.html">
+                    <img src={firstImg8} alt="" />
+                    <p>Dove</p>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Special Events Content */}
+            {activeTab === "special" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-special"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="bird.html" className="active">
+                    <img src={firstImg7} alt="" />
+                    <p>Turkey</p>
+                  </a>
+                  <a href="dove.html">
+                    <img src={firstImg8} alt="" />
+                    <p>Dove</p>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Other Activities Content */}
+            {activeTab === "other" && (
+              <div
+                className="tab-pane fade show active"
+                id="pills-other"
+                role="tabpanel"
+              >
+                <div className="links_wrap">
+                  <a href="bird.html" className="active">
+                    <img src={firstImg7} alt="" />
+                    <p>Turkey</p>
+                  </a>
+                  <a href="dove.html">
+                    <img src={firstImg8} alt="" />
+                    <p>Dove</p>
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* <div className="tab-content position-relative" id="pills-tabContent">
             {loading ? (
               <p>Loading data...</p>
             ) : (
@@ -222,7 +424,7 @@ function Home() {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
           <div class="searchbar">
             <div class="search_box">
               <form method="POST" action="">
@@ -307,11 +509,11 @@ function Home() {
                           ))}
                         </ul>
                         <button
-                        onClick={() => handleBooking(item)}
-                        className="btn btn-dark"
-                      >
-                        {item.totalAmount}/Night
-                      </button>
+                          onClick={() => handleBooking(item)}
+                          className="btn btn-dark"
+                        >
+                          {item.totalAmount}/Night
+                        </button>
                       </div>
                     </div>
                     <span className="watched">

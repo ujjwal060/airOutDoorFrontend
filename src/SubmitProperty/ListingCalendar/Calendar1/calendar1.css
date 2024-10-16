@@ -45,7 +45,7 @@
   
   .calendar-day {
     text-align: center;
-    padding: 10px;
+    padding: 7px;
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
@@ -96,3 +96,22 @@
     color: #ff9999;
   }
   
+  @media (max-width: 400px) {
+    .calendar-header h2 {
+      font-size: 1rem;
+    }
+    
+    .calendar-header button {
+      padding: 5px 6px;
+      font-size: 1.2rem;
+    }
+    
+    .calendar-grid {
+      gap: 2px;
+    }
+    
+    .calendar-day {
+      padding: 4px;
+      font-size: 10px;
+    }
+  }
