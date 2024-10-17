@@ -23,7 +23,7 @@ function ResetPassword() {
     }
     try {
       const response = await axios.post(
-        "http://44.196.192.232:8000/user/setPassword",
+        "http://localhot:8000/user/setPassword",
         { password:password, email: email }
       );
       toast.success("Password reset successful!");

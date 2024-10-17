@@ -30,7 +30,7 @@ function OTP() {
 
     try {
       const response = await axios.post(
-        "http://44.196.192.232:8000/user/verifyCode",
+        "http://localhot:8000/user/verifyCode",
         { verificationCode: otpCode, email: email }
       );
       toast.success("OTP verified successfully!");
@@ -44,7 +44,7 @@ function OTP() {
 
   const handleResend = async () => {
     try {
-      const response = await axios.post("http://44.196.192.232:8000/user/sendOTP", {
+      const response = await axios.post("http://localhot:8000/user/sendOTP", {
         email: email,
       });
       if (response.status === 200) {

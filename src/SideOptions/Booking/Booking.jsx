@@ -36,7 +36,7 @@ function Booking() {
   const fetchBooking = async () => {
     try {
       const response = await axios.get(
-        `http://44.196.192.232:8000/booking/book/${userId}`
+        `http://localhot:8000/booking/book/${userId}`
       );
       setBookings(response.data);
     } catch (error) {

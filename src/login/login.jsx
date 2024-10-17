@@ -15,7 +15,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://44.196.192.232:8000/user/login", {
+      const response = await axios.post("http://localhot:8000/user/login", {
         username,
         password,
       });

@@ -62,7 +62,7 @@ function PropertyDetail() {
     };
     try {
       const response = await axios.post(
-        "http://44.196.192.232:8000/booking/book",
+        "http://localhot:8000/booking/book",
         bookingData
       );
 

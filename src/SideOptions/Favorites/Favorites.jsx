@@ -18,7 +18,7 @@ function Favorites() {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get(`http://44.196.192.232:8000/fav/getFav/${userId}`);
+      const response = await axios.get(`http://localhot:8000/fav/getFav/${userId}`);
       setFavorites(response.data);
     } catch (error) {
       toast.error(error.response?.data?.message);
@@ -28,7 +28,7 @@ function Favorites() {
   const removeFromFavorites = async (propertyId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete("http://44.196.192.232:8000/fav/deleteFav", {
+      await axios.delete("http://localhot:8000/fav/deleteFav", {
         data: { userId, propertyId },
         headers: {
           Authorization: `Bearer ${token}`,
