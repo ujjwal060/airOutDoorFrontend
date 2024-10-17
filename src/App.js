@@ -34,7 +34,7 @@ import ProtectedRoute from './Protected';
 
 function App() {
   const location = useLocation();
-  const noFooterPaths = ["/login", "/signup", "/passwordrecovery", "/otp", "/passwordreset"];
+  const noFooterPaths = ["/login", "/signup", "/passwordrecovery", "/otp", "/passwordreset","/chats"];
 
   return (
     <div className="App">
