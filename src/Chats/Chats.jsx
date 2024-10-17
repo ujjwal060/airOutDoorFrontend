@@ -10,16 +10,21 @@ import {
   faCheckDouble,
 } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 const dummyImage = "https://via.placeholder.com/50";
 
 function Chats() {
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
   return (
     <div className="container chat-container">
       {/* Header Section */}
       <div className="chat-header c-head d-flex align-items-center justify-content-between text-white">
         <div className="d-flex align-items-center">
-          <FontAwesomeIcon icon={faArrowLeft} className="fa-lg" />
+          <FontAwesomeIcon icon={faArrowLeft} className="fa-lg" onClick={goBack} />
           <div className="d-flex align-items-center" style={{marginLeft: "20px"}}>
             <img
               src={dummyImage}
