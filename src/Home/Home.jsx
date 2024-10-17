@@ -183,15 +183,14 @@ function Home() {
           backgroundImage: `url(${bannerImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}
-      >
+        }}>
         <div class="container">
           <h1>
             Gear Up. Track Down.
             <br />
             Conquer the Wild.
           </h1>
-          <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
+          {/* <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
             <li className="nav-item" role="presentation">
               <button
                 className={`nav-link ${
@@ -248,172 +247,98 @@ function Home() {
                 Other Activities <img src={sixthImg} alt="" />
               </button>
             </li>
-          </ul>
+          </ul> */}
 
-          <div className="tab-content position-relative" id="pills-tabContent">
-            {/* Terrestrial Animals Content */}
-            {activeTab === "terrestrial" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-terrestrial"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="deer.html" className="active">
-                    <img src={firstImg3} alt="" />
-                    <p>Deer</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg4} alt="" />
-                    <p>Eik</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg5} alt="" />
-                    <p>Hog</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg6} alt="" />
-                    <p>Other Hunting</p>
-                  </a>
-                </div>
+          <div className="nav-pills mt-4" id="pills-tab" role="tablist">
+            <li className="nav-item" role="presentation">
+              <div className="links_wrap">
+                <a href="deer.html" className="active">
+                  <img src={firstImg3} alt="" />
+                  <p>Deer</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg4} alt="" />
+                  <p>Eik</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg5} alt="" />
+                  <p>Hog</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg6} alt="" />
+                  <p>Other Hunting</p>
+                </a>
+                <a href="bird.html">
+                  <img src={firstImg7} alt="" />
+                  <p>Turkey</p>
+                </a>
+                <a href="dove.html">
+                  <img src={firstImg8} alt="" />
+                  <p>Dove</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg4} alt="" />
+                  <p>Eik</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg5} alt="" />
+                  <p>Hog</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg6} alt="" />
+                  <p>Other Hunting</p>
+                </a>
+                <a href="bird.html">
+                  <img src={firstImg7} alt="" />
+                  <p>Turkey</p>
+                </a>
+                <a href="dove.html">
+                  <img src={firstImg8} alt="" />
+                  <p>Dove</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg4} alt="" />
+                  <p>Eik</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg5} alt="" />
+                  <p>Hog</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg6} alt="" />
+                  <p>Other Hunting</p>
+                </a>
+                <a href="bird.html">
+                  <img src={firstImg7} alt="" />
+                  <p>Turkey</p>
+                </a>
+                <a href="dove.html">
+                  <img src={firstImg8} alt="" />
+                  <p>Dove</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg4} alt="" />
+                  <p>Eik</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg5} alt="" />
+                  <p>Hog</p>
+                </a>
+                <a href="deer.html">
+                  <img src={firstImg6} alt="" />
+                  <p>Other Hunting</p>
+                </a>
+                <a href="bird.html">
+                  <img src={firstImg7} alt="" />
+                  <p>Turkey</p>
+                </a>
+                <a href="dove.html">
+                  <img src={firstImg8} alt="" />
+                  <p>Dove</p>
+                </a>
               </div>
-            )}
-
-            {/* Aquatic Animals Content */}
-            {activeTab === "aquatic" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-aquatic"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="deer.html" className="active">
-                    <img src={firstImg3} alt="" />
-                    <p>Deer</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg4} alt="" />
-                    <p>Eik</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg5} alt="" />
-                    <p>Hog</p>
-                  </a>
-                  <a href="deer.html">
-                    <img src={firstImg6} alt="" />
-                    <p>Other Hunting</p>
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Aerial Animals Content */}
-            {activeTab === "aerial" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-aerial"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="bird.html" className="active">
-                    <img src={firstImg7} alt="" />
-                    <p>Turkey</p>
-                  </a>
-                  <a href="dove.html">
-                    <img src={firstImg8} alt="" />
-                    <p>Dove</p>
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Adventure Activities Content */}
-            {activeTab === "adventure" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-adventure"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="bird.html" className="active">
-                    <img src={firstImg7} alt="" />
-                    <p>Turkey</p>
-                  </a>
-                  <a href="dove.html">
-                    <img src={firstImg8} alt="" />
-                    <p>Dove</p>
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Special Events Content */}
-            {activeTab === "special" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-special"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="bird.html" className="active">
-                    <img src={firstImg7} alt="" />
-                    <p>Turkey</p>
-                  </a>
-                  <a href="dove.html">
-                    <img src={firstImg8} alt="" />
-                    <p>Dove</p>
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Other Activities Content */}
-            {activeTab === "other" && (
-              <div
-                className="tab-pane fade show active"
-                id="pills-other"
-                role="tabpanel"
-              >
-                <div className="links_wrap">
-                  <a href="bird.html" className="active">
-                    <img src={firstImg7} alt="" />
-                    <p>Turkey</p>
-                  </a>
-                  <a href="dove.html">
-                    <img src={firstImg8} alt="" />
-                    <p>Dove</p>
-                  </a>
-                </div>
-              </div>
-            )}
+            </li>
           </div>
-
-          {/* <div className="tab-content position-relative" id="pills-tabContent">
-            {loading ? (
-              <p>Loading data...</p>
-            ) : (
-              <div
-                className={`tab-pane fade ${activeTab ? "show active" : ""}`}
-              >
-                <div className="links_wrap">
-                  {animalData.length === 0 ? (
-                    <p>No Data Available</p>
-                  ) : (
-                    animalData.map((animal, index) => (
-                      <a
-                        href={`/${animal.slug}`}
-                        key={index}
-                        className="active"
-                      >
-                        <img src={animal.image} alt={animal.name} />
-                        <p>{animal.name}</p>
-                      </a>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div> */}
           <div class="searchbar">
             <div class="search_box">
               <form method="POST" action="">

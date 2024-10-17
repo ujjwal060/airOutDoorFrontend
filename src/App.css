@@ -185,7 +185,7 @@ input:focus-within {
 }
 #pills-tab {
   background: rgba(255, 255, 255, 0.25);
-  padding: 25px 22px;
+  padding: 15px 22px 25px 22px;
   border-radius: 10px;
   flex-wrap: nowrap;
   gap: 15px;
@@ -206,6 +206,7 @@ input:focus-within {
   cursor: pointer;
   font-size: 14px;
   position: relative;
+  overflow: hidden;
 }
 .nav-pills .nav-link::after {
   content: "\f078";
@@ -243,8 +244,11 @@ input:focus-within {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 10px;
 }
+
 .links_wrap a {
   text-align: center;
   display: flex;
@@ -258,6 +262,10 @@ input:focus-within {
   border-radius: 8px;
   text-decoration: none;
   color: #000;
+  flex-shrink: 0;
+}
+.nav{
+  overflow: hidden;
 }
 .links_wrap a.active,
 .links_wrap a:hover {
@@ -1380,12 +1388,12 @@ a.ui-state-default.ui-state-active {
     display: none !important;
   }
 }
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
   #pills-tab {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-}
+} */
 @media (max-width: 991px) {
   .box {
     width: 100%;
@@ -1698,3 +1706,5 @@ a.ui-state-default.ui-state-active {
 .list-location .field:nth-of-type(7){
   width: 600px;
 }
+
+
