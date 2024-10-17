@@ -1,18 +1,36 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate for navigation
-import img6 from "../../images/user1.png";
-import Img2 from "../../images/user2.png";
-import Img3 from "../../images/user3.png";
-import Img4 from "../../images/user4.png";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SecondNav from "../SecondNav/SecondNav";
+import "./Message.css"; // Make sure to import your CSS file
 
 function Message() {
-  const navigate = useNavigate();  // Hook to handle navigation
+  const [vendors, setVendors] = useState([]);
+  const navigate = useNavigate();
 
-  // Function to handle message box click and navigate to /chats
-  const openChat = () => {
-    navigate("/chats");
+  const openChat = (vendor) => {
+    navigate("/chats", {
+      state: {
+        id: vendor._id,
+        vendorId: vendor.vendorId,
+        name: vendor.name,
+        profileImage: vendor.profileImage,
+      },
+    });
   };
+
+  const fetchVendors = async () => {
+    try {
+      const response = await fetch("http://44.196.192.232:8000/vendor/getAll");
+      const data = await response.json();
+      setVendors(data.data);
+    } catch (error) {
+      console.error("Error fetching vendors:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVendors();
+  }, []);
 
   return (
     <div className="message">
@@ -42,34 +60,19 @@ function Message() {
         <div className="container">
           <div className="row">
             <div className="col-sm-12">
-              <div className="message_box" onClick={openChat}>
-                <img src={img6} alt="" />
-                <div className="content">
-                  <h4>Owner 1</h4>
-                  <p>Hey! whatsapp? how can I help you?</p>
+              {vendors.map((vendor) => (
+                <div
+                  className="message_box"
+                  key={vendor._id}
+                  onClick={() => openChat(vendor)}
+                >
+                  <img src={vendor.profileImage} alt={vendor.name} />
+                  <div className="content">
+                    <h4>{vendor.name}</h4>
+                    <p>Hey! whatsapp? how can I help you?</p>
+                  </div>
                 </div>
-              </div>
-              <div className="message_box" onClick={openChat}>
-                <img src={Img2} alt="" />
-                <div className="content">
-                  <h4>Owner 2</h4>
-                  <p>Hey! whatsapp? how can I help you?</p>
-                </div>
-              </div>
-              <div className="message_box" onClick={openChat}>
-                <img src={Img3} alt="" />
-                <div className="content">
-                  <h4>Owner 3</h4>
-                  <p>Hey! whatsapp? how can I help you?</p>
-                </div>
-              </div>
-              <div className="message_box" onClick={openChat}>
-                <img src={Img4} alt="" />
-                <div className="content">
-                  <h4>Owner 4</h4>
-                  <p>Hey! whatsapp? how can I help you?</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

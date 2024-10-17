@@ -99,7 +99,7 @@ function Account() {
       });
 
       if (selectedFile) {
-        formDataToSend.append("image", selectedFile);
+        formDataToSend.append("images", selectedFile);
       }
 
       const response = await axios.put(
