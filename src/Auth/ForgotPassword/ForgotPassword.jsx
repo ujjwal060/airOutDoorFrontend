@@ -13,7 +13,7 @@ function ForgotPassword() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhot:8000/user/forgate", { email });
+      const response = await axios.post("http://localhost:8000/user/forgate", { email });
       if (response.status === 200) {
         toast.success("OTP sent successfully!");
         setTimeout(() => {

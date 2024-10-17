@@ -37,7 +37,7 @@ function ListingCalendar() {
     };
 
     try {
-      await axios.post('http://localhot:8000/host/add', combinedData);
+      await axios.post('http://localhost:8000/host/add', combinedData);
 
       toast.success('Listing saved successfully!');
 

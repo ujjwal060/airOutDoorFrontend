@@ -62,7 +62,7 @@ function PropertyDetail() {
     };
     try {
       const response = await axios.post(
-        "http://localhot:8000/booking/book",
+        "http://localhost:8000/booking/book",
         bookingData
       );
 

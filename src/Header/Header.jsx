@@ -64,7 +64,7 @@ function Header() {
   const fetch = async () => {
     try {
       const response = await axios.get(
-        `http://localhot:8000/user/getUser/${userId}`
+        `http://localhost:8000/user/getUser/${userId}`
       );
       setUser(response?.data?.data);
     } catch (error) {

@@ -34,7 +34,7 @@ function Signup() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhot:8000/user/signup",
+        "http://localhost:8000/user/signup",
         formData
       );
       toast.success("Registration successful!");
