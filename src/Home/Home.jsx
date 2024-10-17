@@ -62,7 +62,7 @@ function Home() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/catogries/subCatogry",
+        "http://44.196.192.232:8000/catogries/subCatogry",
         { activeTab }
       );
       setAnimalData(response.data.result);
@@ -76,7 +76,7 @@ function Home() {
   const fetchBooking = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/booking/book/${userId}`
+        `http://44.196.192.232:8000/booking/book/${userId}`
       );
       setBooking(response.data);
     } catch (error) {
@@ -101,7 +101,7 @@ function Home() {
   const fetchProperties = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/property/featured"
+        "http://44.196.192.232:8000/property/featured"
       );
       setProperties(response.data);
     } catch (error) {
@@ -128,7 +128,7 @@ function Home() {
 
   const addToFavorites = async (propertyId) => {
     try {
-      await axios.post("http://localhost:8000/fav/addFav", {
+      await axios.post("http://44.196.192.232:8000/fav/addFav", {
         userId,
         propertyId,
       });
@@ -142,7 +142,7 @@ function Home() {
   const fetchFavorites = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/fav/getFav/${userId}`
+        `http://44.196.192.232:8000/fav/getFav/${userId}`
       );
       setFavorites(response.data);
     } catch (error) {
@@ -153,7 +153,7 @@ function Home() {
   const removeFromFavorites = async (propertyId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete("http://localhost:8000/fav/deleteFav", {
+      await axios.delete("http://44.196.192.232:8000/fav/deleteFav", {
         data: { userId, propertyId },
         headers: {
           Authorization: `Bearer ${token}`,

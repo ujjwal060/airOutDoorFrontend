@@ -20,7 +20,7 @@ function Message() {
 
   const fetchVendors = async () => {
     try {
-      const response = await fetch("http://localhost:8000/vendor/getAll");
+      const response = await fetch("http://44.196.192.232:8000/vendor/getAll");
       const data = await response.json();
       setVendors(data.data);
     } catch (error) {

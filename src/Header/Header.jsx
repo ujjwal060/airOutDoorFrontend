@@ -64,7 +64,7 @@ function Header() {
   const fetch = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/getUser/${userId}`
+        `http://44.196.192.232:8000/user/getUser/${userId}`
       );
       setUser(response?.data?.data);
     } catch (error) {
