@@ -9,8 +9,8 @@ import {
   faSmile,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import { db } from "./firebase"; // Import your Firestore instance
-import { collection, addDoc, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "./firebase";
+import { ref, set, onValue } from "firebase/database";
 
 const dummyImage = "https://via.placeholder.com/50";
 
@@ -26,23 +26,23 @@ function Chats() {
     navigate(-1);
   };
 
-  // Fetch chat messages from Firestore
   useEffect(() => {
-    const messagesRef = collection(db, "chats");
-    const q = query(messagesRef, orderBy("timestamp", "asc"));
+    const messagesRef = ref(db, "chats");
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedMessages = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const fetchedMessages = [];
+      snapshot.forEach((childSnapshot) => {
+        fetchedMessages.push({
+          id: childSnapshot.key,
+          ...childSnapshot.val(),
+        });
+      });
       setMessages(fetchedMessages);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Function to send a new message
   const sendMessage = async () => {
     if (newMessage.trim() === "") {
       console.log("Message is empty, nothing to send.");
@@ -50,19 +50,19 @@ function Chats() {
     }
 
     try {
-      const messagesRef = collection(db, "chats");
+      const messageId = new Date().getTime();
+      const messageRef = ref(db, `chats/${messageId}`);
+
       const newMessageData = {
         text: newMessage,
-        senderId: localStorage.getItem("userId"), // Ensure userId is set
+        senderId: localStorage.getItem("userId"),
         vendorId: vendorId,
         profileImage: profileImage || dummyImage,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
 
-      console.log("Sending message data: ", newMessageData); // Log the message data
-
-      await addDoc(messagesRef, newMessageData);
-      setNewMessage(""); // Clear input after sending
+      await set(messageRef, newMessageData);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message: ", error);
     }
@@ -106,7 +106,9 @@ function Chats() {
             )}
             <div className={`chat-bubble p-2 rounded ${msg.senderId === localStorage.getItem("userId") ? "bg-dark text-white" : "bg-light"}`}>
               <p className="mb-0">{msg.text}</p>
-              <small className="text-muted">{new Date(msg.timestamp.toDate()).toLocaleTimeString()}</small>
+              <small className="text-muted">
+                {new Date(msg.timestamp).toLocaleTimeString()}
+              </small>
             </div>
             {msg.senderId === localStorage.getItem("userId") && (
               <img
@@ -130,7 +132,7 @@ function Chats() {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
-              e.preventDefault(); // Prevent form submission if inside a form
+              e.preventDefault();
               sendMessage();
             }
           }}
