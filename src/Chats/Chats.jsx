@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./chats.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,37 +7,96 @@ import {
   faEllipsisV,
   faPaperPlane,
   faSmile,
-  faCheckDouble,
 } from "@fortawesome/free-solid-svg-icons";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { db } from "./firebase";
+import { ref, set, onValue, push } from "firebase/database";
 
 const dummyImage = "https://via.placeholder.com/50";
 
 function Chats() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { _id, vendorId, name, profileImage } = location.state || {};
+  const { vendorId, name, profileImage } = location.state || {};
+
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
+
+  const userId = localStorage.getItem("userId");
 
   const goBack = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    const messagesRef = ref(db, `chats/${userId}${vendorId}`);
+
+    const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const fetchedMessages = [];
+      snapshot.forEach((childSnapshot) => {
+        fetchedMessages.push({
+          id: childSnapshot.key,
+          ...childSnapshot.val(),
+        });
+      });
+
+      fetchedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+      setMessages(fetchedMessages);
+      scrollToBottom();
+    });
+
+    return () => unsubscribe();
+  }, [vendorId]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const sendMessage = async () => {
+    if (newMessage.trim() === "") {
+      console.log("Message is empty, nothing to send.");
+      return;
+    }
+
+    try {
+      const messageRef = ref(db, `chats/${userId}${vendorId}`);
+      const newMessageData = {
+        text: newMessage,
+        senderId: userId,
+        reciverId: vendorId,
+        timestamp: new Date().toISOString(),
+      };
+
+      await push(messageRef, newMessageData);
+
+      const chatMetadataRef = ref(db, `chatMetadata/${userId}_${vendorId}`);
+      const chatMetadata = {
+        userId: userId,
+        vendorId: vendorId,
+        lastMessage: newMessage,
+        timestamp: newMessageData.timestamp,
+      };
+
+      await set(chatMetadataRef, chatMetadata);
+
+      setNewMessage("");
+      scrollToBottom();
+    } catch (error) {
+      console.error("Error sending message: ", error);
+    }
+  };
+
   return (
     <div className="container chat-container">
       {/* Header Section */}
       <div className="chat-header c-head d-flex align-items-center justify-content-between text-white">
         <div className="d-flex align-items-center">
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="fa-lg"
-            onClick={goBack}
-          />
-          <div
-            className="d-flex align-items-center"
-            style={{ marginLeft: "20px" }}
-          >
+          <FontAwesomeIcon icon={faArrowLeft} className="fa-lg" onClick={goBack} />
+          <div className="d-flex align-items-center" style={{ marginLeft: "20px" }}>
             <img
-              src={profileImage || "https://via.placeholder.com/50"}
+              src={profileImage || dummyImage}
               alt="Profile"
               className="chat-profile-image rounded-circle me-2"
             />
@@ -50,65 +109,65 @@ function Chats() {
         </div>
       </div>
 
-      {/* Chat Date */}
-      <div className="text-center my-2">
-        <span className="chat-date">TODAY</span>
-      </div>
-
+      {/* Chat Messages */}
       <div className="chat-messages p-3">
-        <div className="d-flex align-items-start mb-3">
-          <img
-            src={profileImage || "https://via.placeholder.com/50"}
-            alt="Profile"
-            style={{ width: "40px", height: "40px", objectFit: "cover" }}
-            className="rounded-circle me-2"
-          />
+        {messages.map((msg) => (
           <div
-            className="chat-bubble p-2 rounded"
-            style={{ backgroundColor: "#DBDBDB" }}
+            key={msg.id}
+            className={`d-flex mb-3 ${
+              msg.senderId === userId
+                ? "align-items-end justify-content-end"
+                : "align-items-start"
+            }`}
           >
-            <p className="mb-0">
-              Absolutely! ✨ I'm all in for ice cream. I'll bring my favorite
-              flavors. What's your preference?
-            </p>
-            <small className="text-muted">3:37 PM</small>
-          </div>
-        </div>
-
-        <div className="d-flex align-items-end justify-content-end mb-3">
-          <div className="chat-bubble bg-dark text-white p-2 rounded">
-            <p className="mb-0">
-              Awesome! 🍕 I love chocolate chip cookie dough. Looking forward to
-              pizza party on Friday!!
-            </p>
-            <div className="d-flex justify-content-between">
-              <small className="text-muted" style={{ color: "#fff" }}>
-                3:29 PM
-              </small>
-              <FontAwesomeIcon
-                icon={faCheckDouble}
-                className="fa-xs text-white ms-2"
+            {msg.senderId !== userId && (
+              <img
+                src={msg.profileImage || dummyImage}
+                alt="Profile"
+                className="rounded-circle me-2"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
               />
+            )}
+            <div
+              className={`chat-bubble p-2 rounded ${
+                msg.senderId === userId ? "bg-dark text-white" : "bg-light"
+              }`}
+            >
+              <p className="mb-0">{msg.text}</p>
+              <small className="text-muted">
+                {new Date(msg.timestamp).toLocaleTimeString()}
+              </small>
             </div>
+            {msg.senderId === userId && (
+              <img
+                src={dummyImage}
+                alt="Profile"
+                className="rounded-circle ms-2"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
+              />
+            )}
           </div>
-          <img
-            src={dummyImage}
-            alt="Profile"
-            className="rounded-circle ms-2"
-            width="40"
-            height="40"
-          />
-        </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
 
+      {/* Chat Input */}
       <div className="chat-input d-flex align-items-center p-3 c-input">
         <FontAwesomeIcon icon={faSmile} className="fa-lg text-white me-3" />
         <input
           type="text"
           className="form-control me-3"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
           placeholder="Type a message"
         />
-        <FontAwesomeIcon icon={faPaperPlane} className="fa-lg text-white" />
+        <FontAwesomeIcon icon={faPaperPlane} className="fa-lg text-white" onClick={sendMessage} />
       </div>
     </div>
   );
