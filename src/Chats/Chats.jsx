@@ -30,7 +30,7 @@ function Chats() {
   };
 
   useEffect(() => {
-    const messagesRef = ref(db, `chats/${vendorId}`);
+    const messagesRef = ref(db, `chats/${userId}${vendorId}`);
 
     const unsubscribe = onValue(messagesRef, (snapshot) => {
       const fetchedMessages = [];
@@ -61,12 +61,11 @@ function Chats() {
     }
 
     try {
-      const messageRef = ref(db, `chats/${vendorId}`);
+      const messageRef = ref(db, `chats/${userId}${vendorId}`);
       const newMessageData = {
         text: newMessage,
         senderId: userId,
-        vendorId: vendorId,
-        profileImage: profileImage || dummyImage,
+        reciverId: vendorId,
         timestamp: new Date().toISOString(),
       };
 
