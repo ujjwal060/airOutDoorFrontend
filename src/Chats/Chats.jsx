@@ -122,7 +122,7 @@ function Chats() {
           >
             {msg.senderId !== userId && (
               <img
-                src={msg.profileImage || dummyImage}
+                src={profileImage || dummyImage}
                 alt="Profile"
                 className="rounded-circle me-2"
                 style={{ width: "40px", height: "40px", objectFit: "cover" }}
