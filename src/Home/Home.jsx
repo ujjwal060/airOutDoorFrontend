@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Slider from "react-slick";
-import firstImg from "../images/deer.svg";
-import secondImg from "../images/fish.svg";
-import thirdImg from "../images/pigeon.svg";
-import fourthImg from "../images/hiking.svg";
-import fifthImg from "../images/calender.svg";
-import sixthImg from "../images/menu.svg";
-import seventhImg from "../images/2.png";
-import eightImg from "../images/1.png";
-import ninthImg from "../images/3.png";
-import tenthImg from "../images/4.png";
 import fifthImg1 from "../images/driver.png";
 import sixthImg1 from "../images/booking.png";
 import seventhImg1 from "../images/terms.png";
@@ -50,7 +40,6 @@ function Home() {
   };
 
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState();
   const [animalData, setAnimalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([]);
@@ -58,14 +47,13 @@ function Home() {
   const [favorites, setFavorites] = useState([]);
   const userId = localStorage.getItem("userId");
 
-  const fetchSubCatogry = async (category) => {
+  const fetchSubCatogry = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://44.196.192.232:8000/catogries/subCatogry",
-        { activeTab }
+      const response = await axios.get(
+        "http://44.196.192.232:8000/catogries/getAll"
       );
-      setAnimalData(response.data.result);
+      setAnimalData(response.data.data);
     } catch (error) {
       toast.error(error.response?.data?.message);
     } finally {
@@ -106,15 +94,6 @@ function Home() {
       setProperties(response.data);
     } catch (error) {
       toast.error(error.response?.data?.message);
-    }
-  };
-
-  const handleTabClick = (tabName) => {
-    if (activeTab !== tabName) {
-      setActiveTab(tabName);
-      fetchSubCatogry(tabName);
-    } else {
-      setActiveTab(null);
     }
   };
 
@@ -170,10 +149,8 @@ function Home() {
     fetchProperties();
     fetchBooking();
     fetchFavorites();
-    if (activeTab) {
-      fetchSubCatogry(activeTab);
-    }
-  }, [activeTab]);
+    fetchSubCatogry();
+  }, []);
 
   return (
     <div className="home">
@@ -183,160 +160,39 @@ function Home() {
           backgroundImage: `url(${bannerImg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}>
+        }}
+      >
         <div class="container">
           <h1>
             Gear Up. Track Down.
             <br />
             Conquer the Wild.
           </h1>
-          {/* <ul className="nav nav-pills mt-4" id="pills-tab" role="tablist">
+          <div className="nav-pill mt-4" id="pills-tab" role="tablist">
             <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${
-                  activeTab === "terrestrial" ? "active" : ""
-                }`}
-                onClick={() => handleTabClick("terrestrial")}
-              >
-                Terrestrial Animals <img src={firstImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${
-                  activeTab === "aquatic" ? "active" : ""
-                }`}
-                onClick={() => handleTabClick("aquatic")}
-              >
-                Aquatic Animals <img src={secondImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "aerial" ? "active" : ""}`}
-                onClick={() => handleTabClick("aerial")}
-              >
-                Aerial Animals <img src={thirdImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${
-                  activeTab === "adventure" ? "active" : ""
-                }`}
-                onClick={() => handleTabClick("adventure")}
-              >
-                Adventure Activities <img src={fourthImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${
-                  activeTab === "special" ? "active" : ""
-                }`}
-                onClick={() => handleTabClick("special")}
-              >
-                Special Events <img src={fifthImg} alt="" />
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className={`nav-link ${activeTab === "other" ? "active" : ""}`}
-                onClick={() => handleTabClick("other")}
-              >
-                Other Activities <img src={sixthImg} alt="" />
-              </button>
-            </li>
-          </ul> */}
-
-          <div className="nav-pills mt-4" id="pills-tab" role="tablist">
-            <li className="nav-item" role="presentation">
-              <div className="links_wrap">
-                <a href="deer.html" className="active">
-                  <img src={firstImg3} alt="" />
-                  <p>Deer</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg4} alt="" />
-                  <p>Eik</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg5} alt="" />
-                  <p>Hog</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg6} alt="" />
-                  <p>Other Hunting</p>
-                </a>
-                <a href="bird.html">
-                  <img src={firstImg7} alt="" />
-                  <p>Turkey</p>
-                </a>
-                <a href="dove.html">
-                  <img src={firstImg8} alt="" />
-                  <p>Dove</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg4} alt="" />
-                  <p>Eik</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg5} alt="" />
-                  <p>Hog</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg6} alt="" />
-                  <p>Other Hunting</p>
-                </a>
-                <a href="bird.html">
-                  <img src={firstImg7} alt="" />
-                  <p>Turkey</p>
-                </a>
-                <a href="dove.html">
-                  <img src={firstImg8} alt="" />
-                  <p>Dove</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg4} alt="" />
-                  <p>Eik</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg5} alt="" />
-                  <p>Hog</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg6} alt="" />
-                  <p>Other Hunting</p>
-                </a>
-                <a href="bird.html">
-                  <img src={firstImg7} alt="" />
-                  <p>Turkey</p>
-                </a>
-                <a href="dove.html">
-                  <img src={firstImg8} alt="" />
-                  <p>Dove</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg4} alt="" />
-                  <p>Eik</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg5} alt="" />
-                  <p>Hog</p>
-                </a>
-                <a href="deer.html">
-                  <img src={firstImg6} alt="" />
-                  <p>Other Hunting</p>
-                </a>
-                <a href="bird.html">
-                  <img src={firstImg7} alt="" />
-                  <p>Turkey</p>
-                </a>
-                <a href="dove.html">
-                  <img src={firstImg8} alt="" />
-                  <p>Dove</p>
-                </a>
-              </div>
+              {animalData.length > 0 ? (
+                animalData.map((animal) => (
+                  <div
+                    key={animal._id}
+                    className="active"
+                    // onClick={() => handleAnimalClick(animal.name)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img
+                      src={animal.image}
+                      alt={animal.name}
+                      className="img-fluid"
+                      style={{
+                        maxWidth: "75px",
+                        height: "auto",
+                      }}
+                    />
+                    <p className="text-white mb-0">{animal.name}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No animals found</p>
+              )}
             </li>
           </div>
           <div class="searchbar">
@@ -360,6 +216,7 @@ function Home() {
           </div>
         </div>
       </section>
+
       {isLoggedIn && (
         <section className="pt-5">
           <div className="container">
