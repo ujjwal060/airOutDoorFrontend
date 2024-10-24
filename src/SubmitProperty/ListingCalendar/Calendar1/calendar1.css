@@ -115,3 +115,18 @@
       font-size: 10px;
     }
   }
+
+  .check-in-day {
+    background-color: #3f51b5; /* Blue for check-in */
+    color: white;
+  }
+  
+  .check-out-day {
+    background-color: #ff5722; /* Red for check-out */
+    color: white;
+  }
+  
+  .current-day {
+    border: 2px solid #ffc107; /* Highlight today's date */
+  }
+  
