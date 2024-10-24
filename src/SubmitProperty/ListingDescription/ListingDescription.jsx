@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function ListingDescription() {
   const [formData, setFormData] = useState({
@@ -10,8 +11,24 @@ function ListingDescription() {
     instant_booking: false,
   });
 
+  const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://44.196.192.232:8000/catogries/getAll"
+      );
+      setCategories(response.data.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,10 +43,12 @@ function ListingDescription() {
     if (!formData.propery_nickname) {
       formErrors.propery_nickname = "Property Nickname is required";
     }
+    if (formData.category === "0") {
+      formErrors.category = "Category is required";
+    }
     if (!formData.property_description) {
       formErrors.property_description = "Property Description is required";
     }
-    // Add other field validations if necessary
     return formErrors;
   };
 
@@ -78,12 +97,16 @@ function ListingDescription() {
                       value={formData.category}
                       onChange={handleChange}
                     >
-                      <option value="0">Flats</option>
-                      <option value="1">1 BHK</option>
-                      <option value="2">2 BHK</option>
-                      <option value="3">3 BHK</option>
-                      <option value="4">4 BHK</option>
+                      <option value="0">Select Category</option>
+                      {categories.map((category) => (
+                        <option key={category._id} value={category._id}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
+                    {errors.category && (
+                      <p style={{ color: "red" }}>{errors.category}</p>
+                    )}
                   </div>
                   
                   <div className="field">
@@ -110,7 +133,6 @@ function ListingDescription() {
                       <input
                         type="checkbox"
                         name="instant_booking"
-                        id=""
                         style={{ marginRight: "6px" }}
                         checked={formData.instant_booking}
                         onChange={handleChange}
@@ -145,7 +167,7 @@ function ListingDescription() {
                       <span>5</span> Location
                     </div>
                     <div className="step">
-                      <span>6</span> Calender
+                      <span>6</span> Calendar
                     </div>
                   </div>
                 </div>

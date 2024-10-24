@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import './calendar1.css';
+import React, { useState } from "react";
+import "./calendar1.css";
 
-const Calendar1 = ({ initialMonthOffset = 0 }) => {
+const Calendar1 = ({ initialMonthOffset = 0, onDateChange, selectedDates }) => {
   const [monthOffset, setMonthOffset] = useState(initialMonthOffset);
-
   const today = new Date();
   const displayedMonth = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
 
@@ -32,12 +31,26 @@ const Calendar1 = ({ initialMonthOffset = 0 }) => {
     setMonthOffset((prevOffset) => prevOffset + 1);
   };
 
+  const handleDateClick = (day) => {
+    const selectedDate = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth(), day);
+    let { checkIn, checkOut } = selectedDates;
+
+    if (!checkIn || (checkIn && checkOut)) {
+      checkIn = selectedDate; // Set check-in date
+      checkOut = null; // Reset check-out date
+    } else if (checkIn && !checkOut && selectedDate > checkIn) {
+      checkOut = selectedDate; // Set check-out date if valid
+    }
+
+    onDateChange(checkIn, checkOut); // Notify parent of the date change
+  };
+
   return (
     <div className="calendar-container">
       <div className="calendar-header">
         <button onClick={handlePrevMonth}>{"<"}</button>
-        <h2 style={{textAlign: "center"}}>
-          {displayedMonth.toLocaleString('default', { month: 'long' })} {displayedMonth.getFullYear()}
+        <h2 style={{ textAlign: "center" }}>
+          {displayedMonth.toLocaleString("default", { month: "long" })} {displayedMonth.getFullYear()}
         </h2>
         <button onClick={handleNextMonth}>{">"}</button>
       </div>
@@ -55,15 +68,19 @@ const Calendar1 = ({ initialMonthOffset = 0 }) => {
         ))}
 
         {daysOfCurrentMonth.map((day, index) => {
-          const isToday = 
+          const isToday =
             day === today.getDate() &&
             displayedMonth.getMonth() === today.getMonth() &&
             displayedMonth.getFullYear() === today.getFullYear();
-            
+          
+          const isCheckIn = selectedDates.checkIn && selectedDates.checkIn.getDate() === day && selectedDates.checkIn.getMonth() === displayedMonth.getMonth() && selectedDates.checkIn.getFullYear() === displayedMonth.getFullYear();
+          const isCheckOut = selectedDates.checkOut && selectedDates.checkOut.getDate() === day && selectedDates.checkOut.getMonth() === displayedMonth.getMonth() && selectedDates.checkOut.getFullYear() === displayedMonth.getFullYear();
+          
           return (
             <div
               key={index}
-              className={`calendar-day current-month-day ${isToday ? 'current-day' : ''}`}
+              className={`calendar-day current-month-day ${isToday ? 'current-day' : ''} ${isCheckIn ? 'check-in-day' : ''} ${isCheckOut ? 'check-out-day' : ''}`}
+              onClick={() => handleDateClick(day)}
             >
               {day}
             </div>
